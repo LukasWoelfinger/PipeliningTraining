@@ -1,0 +1,123 @@
+{
+    "tasks": [
+        {
+            "environment": {},
+            "displayName": "dotnet build",
+            "alwaysRun": false,
+            "continueOnError": false,
+            "condition": "succeeded()",
+            "enabled": true,
+            "timeoutInMinutes": 0,
+            "inputs": {
+                "command": "build",
+                "publishWebProjects": "true",
+                "projects": "",
+                "custom": "",
+                "arguments": "",
+                "restoreArguments": "",
+                "publishTestResults": "true",
+                "testRunTitle": "",
+                "zipAfterPublish": "true",
+                "modifyOutputPath": "true",
+                "selectOrConfig": "select",
+                "feedRestore": "",
+                "includeNuGetOrg": "true",
+                "nugetConfigPath": "",
+                "externalEndpoints": "",
+                "noCache": "false",
+                "packagesDirectory": "",
+                "verbosityRestore": "Detailed",
+                "searchPatternPush": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+                "nuGetFeedType": "internal",
+                "feedPublish": "",
+                "publishPackageMetadata": "true",
+                "externalEndpoint": "",
+                "searchPatternPack": "**/*.csproj",
+                "configurationToPack": "$(BuildConfiguration)",
+                "outputDir": "$(Build.ArtifactStagingDirectory)",
+                "nobuild": "false",
+                "includesymbols": "false",
+                "includesource": "false",
+                "versioningScheme": "off",
+                "versionEnvVar": "",
+                "requestedMajorVersion": "1",
+                "requestedMinorVersion": "0",
+                "requestedPatchVersion": "0",
+                "buildProperties": "",
+                "verbosityPack": "Detailed",
+                "workingDirectory": ""
+            },
+            "task": {
+                "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+                "versionSpec": "2.*",
+                "definitionType": "task"
+            }
+        },
+        {
+            "environment": {},
+            "displayName": "Azure CLI ",
+            "alwaysRun": false,
+            "continueOnError": false,
+            "condition": "succeeded()",
+            "enabled": true,
+            "timeoutInMinutes": 0,
+            "inputs": {
+                "connectedServiceNameARM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                "scriptType": "pscore",
+                "scriptLocation": "inlineScript",
+                "scriptPath": "",
+                "inlineScript": "# TEST\nWrite-Host \"Hello\"",
+                "scriptArguments": "",
+                "powerShellErrorActionPreference": "stop",
+                "addSpnToEnvironment": "false",
+                "useGlobalConfig": "false",
+                "cwd": "",
+                "failOnStandardError": "false",
+                "powerShellIgnoreLASTEXITCODE": "false"
+            },
+            "task": {
+                "id": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                "versionSpec": "2.*",
+                "definitionType": "task"
+            }
+        }
+    ],
+    "runsOn": [
+        "Agent"
+    ],
+    "revision": 2,
+    "createdBy": {
+        "displayName": "Mr DevOps",
+        "id": "5d12063d-203a-42de-8275-f625787be8a5",
+        "uniqueName": "ab@c.com"
+    },
+    "createdOn": "2021-06-11T13:14:54.187Z",
+    "modifiedBy": {
+        "displayName": "Mr DevOps",
+        "id": "5d12063d-203a-42de-8275-f625787be8a5",
+        "uniqueName": "ab@c.com"
+    },
+    "modifiedOn": "2021-06-11T13:15:43.860Z",
+    "comment": "",
+    "id": "40141383-e98c-4e85-bdbd-66e3415d9104",
+    "name": "Terraform-CD_TaskGroup",
+    "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0,
+        "isTest": false
+    },
+    "friendlyName": "Terraform-CD_TaskGroup",
+    "category": "Deploy",
+    "definitionType": "metaTask",
+    "demands": [],
+    "groups": [],
+    "inputs": [],
+    "satisfies": [],
+    "sourceDefinitions": [],
+    "dataSourceBindings": [],
+    "instanceNameFormat": "Task group: Terraform-CD_TaskGroup ",
+    "preJobExecution": {},
+    "execution": {},
+    "postJobExecution": {}
+}

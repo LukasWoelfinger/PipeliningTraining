@@ -1,0 +1,87 @@
+trigger:
+- main
+
+variables:
+#Step 1,2,5
+  location: 'westeurope'
+  terraformstoragerg: 'Storage'
+  terraformstorageaccount: 'woelfingerterraformstate'
+  #Step 5,8
+  applicationname: 'lwpulterraformweb'
+  environmentname: 'Test'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Azure CLI '
+  inputs:
+    azureSubscription: 'Reuse of SmartHotesl360.20210517'
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: |
+     # Create Azure resource group for Terraform state storage
+     az group create --location $(location) --name $(terraformstoragerg)
+     
+     # Create storage account
+     az storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS
+     
+     # Create storage container
+     az storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)
+     
+     az storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)   
+  env:
+    AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+
+- task: AzurePowerShell@5
+  displayName: 'Azure PowerShell script: InlineScript'
+  inputs:
+    azureSubscription: 'Reuse of SmartHotesl360.20210517'
+    ScriptType: InlineScript
+    Inline: |
+     # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
+     
+     $key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]
+     
+     Write-Host "##vso[task.setvariable variable=storagekey]$key"
+    azurePowerShellVersion: LatestVersion
+
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in **/*.tf'
+  inputs:
+    targetFiles: '**/*.tf'
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+  displayName: 'Install Terraform 0.15.5'
+  inputs:
+    terraformVersion: 0.15.5
+
+#Your build pipeline references an undefined variable named ‘terraformstoragecontainer’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+  displayName: 'Terraform : init'
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+    backendServiceArm: 'Reuse of SmartHotesl360.20210517'
+    backendAzureRmResourceGroupName: '$(terraformstoragerg)'
+    backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
+    backendAzureRmContainerName: '$(terraformstoragecontainer)'
+    backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+  displayName: 'Terraform : plan'
+  inputs:
+    command: plan
+    workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+    environmentServiceNameAzureRM: 'Reuse of SmartHotesl360.20210517'
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+  displayName: 'Terraform : apply'
+  inputs:
+    command: apply
+    workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+    environmentServiceNameAzureRM: 'Reuse of SmartHotesl360.20210517'
+
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
+  inputs:
+    azureSubscription: 'Reuse of SmartHotesl360.20210517'
+    appType: webAppLinux
+    WebAppName: 'app-$(applicationname)-$(environmentname)'

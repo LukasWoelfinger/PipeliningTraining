@@ -1,0 +1,554 @@
+{
+    "source": 2,
+    "revision": 1,
+    "description": null,
+    "createdBy": {
+        "displayName": "Mr DevOps",
+        "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
+        "_links": {
+            "avatar": {
+                "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+            }
+        },
+        "id": "5d12063d-203a-42de-8275-f625787be8a5",
+        "uniqueName": "ab@c.com",
+        "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+        "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+    },
+    "createdOn": "2021-06-09T19:08:41.560Z",
+    "modifiedBy": {
+        "displayName": "Mr DevOps",
+        "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
+        "_links": {
+            "avatar": {
+                "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+            }
+        },
+        "id": "5d12063d-203a-42de-8275-f625787be8a5",
+        "uniqueName": "ab@c.com",
+        "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+        "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+    },
+    "modifiedOn": "2021-06-09T19:08:41.560Z",
+    "isDeleted": false,
+    "variables": {
+        "applicationname": {
+            "value": "lwpulterraformweb"
+        },
+        "appserviceplan": {
+            "value": "PULTerraformplan"
+        },
+        "environmentname": {
+            "value": "DEV"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "storagekey": {
+            "value": "PipelineWillGetThisValueRuntime"
+        },
+        "subscriptionid": {
+            "value": "38820533-3004-415d-a57a-910d2b6d6097"
+        },
+        "terraformstorageaccount": {
+            "value": "woelfingerterraformstate"
+        },
+        "terraformstoragecontainer": {
+            "value": "terraform"
+        },
+        "terraformstoragerg": {
+            "value": "Storage"
+        }
+    },
+    "variableGroups": [],
+    "environments": [
+        {
+            "id": 8,
+            "name": "Dev",
+            "rank": 1,
+            "owner": {
+                "displayName": "Mr DevOps",
+                "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
+                "_links": {
+                    "avatar": {
+                        "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                    }
+                },
+                "id": "5d12063d-203a-42de-8275-f625787be8a5",
+                "uniqueName": "ab@c.com",
+                "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+                "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+            },
+            "variables": {},
+            "variableGroups": [],
+            "preDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false,
+                        "id": 22
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 1
+                }
+            },
+            "deployStep": {
+                "id": 23
+            },
+            "postDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false,
+                        "id": 24
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 2
+                }
+            },
+            "deployPhases": [
+                {
+                    "deploymentInput": {
+                        "parallelExecution": {
+                            "parallelExecutionType": 0
+                        },
+                        "agentSpecification": {
+                            "identifier": "ubuntu-20.04"
+                        },
+                        "skipArtifactsDownload": false,
+                        "artifactsDownloadInput": {
+                            "downloadInputs": [
+                                {
+                                    "alias": "_Terraform-CI",
+                                    "artifactType": "Build",
+                                    "artifactDownloadMode": "All",
+                                    "artifactItems": []
+                                }
+                            ]
+                        },
+                        "queueId": 74,
+                        "demands": [],
+                        "enableAccessToken": false,
+                        "timeoutInMinutes": 0,
+                        "jobCancelTimeoutInMinutes": 1,
+                        "condition": "succeeded()",
+                        "overrideInputs": {}
+                    },
+                    "rank": 1,
+                    "phaseType": 1,
+                    "name": "Agent job",
+                    "refName": null,
+                    "workflowTasks": [
+                        {
+                            "environment": {
+                                "AZURE_DEVOPS_CLI_PAT": "$(System.AccessToken)"
+                            },
+                            "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                            "version": "2.*",
+                            "name": "Azure CLI to deploy Terraform state storage - if required",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectedServiceNameARM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "scriptType": "pscore",
+                                "scriptLocation": "inlineScript",
+                                "ScriptPath": "",
+                                "inlineScript": "# Create Azure resource group for Terraform state storage\naz group create --location $(location) --name $(terraformstoragerg)\n\n# Create storage account\naz storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS\n\n# Create storage container\naz storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)\n\naz storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)\n\n",
+                                "scriptArguments": "",
+                                "powerShellErrorActionPreference": "stop",
+                                "addSpnToEnvironment": "false",
+                                "useGlobalConfig": "false",
+                                "cwd": "",
+                                "failOnStandardError": "false",
+                                "powerShellIgnoreLASTEXITCODE": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "72a1931b-effb-4d2e-8fd8-f8472a07cb62",
+                            "version": "5.*",
+                            "name": "Azure PowerShell script to get the storage key",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "ConnectedServiceNameARM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "ScriptType": "InlineScript",
+                                "ScriptPath": "",
+                                "Inline": "# Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account\n\n$key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]\n\nWrite-Host \"##vso[task.setvariable variable=storagekey]$key\"",
+                                "ScriptArguments": "",
+                                "powerShellErrorActionPreference": "stop",
+                                "FailOnStandardError": "false",
+                                "TargetAzurePs": "LatestVersion",
+                                "CustomTargetAzurePs": "",
+                                "pwsh": "false",
+                                "workingDirectory": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "a8515ec8-7254-4ffd-912c-86772e2b5962",
+                            "version": "3.*",
+                            "name": "Replace tokens in terraform file",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "rootDirectory": "",
+                                "targetFiles": "**/*.tf",
+                                "encoding": "auto",
+                                "writeBOM": "true",
+                                "escapeType": "none",
+                                "escapeChar": "",
+                                "charsToEscape": "",
+                                "verbosity": "normal",
+                                "actionOnMissing": "warn",
+                                "keepToken": "false",
+                                "tokenPrefix": "__",
+                                "tokenSuffix": "__",
+                                "useLegacyPattern": "false",
+                                "emptyValue": "(empty)",
+                                "defaultValue": "",
+                                "enableTransforms": "false",
+                                "transformPrefix": "(",
+                                "transformSuffix": ")",
+                                "variableFiles": "",
+                                "variableSeparator": ".",
+                                "enableTelemetry": "true"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "a4789e5d-f6e8-431f-add9-379d640a883c",
+                            "version": "0.*",
+                            "name": "Install Terraform 0.15.5",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "terraformVersion": "0.15.5"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "fe504acc-6115-40cb-89ff-191386b5e7bf",
+                            "version": "2.*",
+                            "name": "Terraform : init",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "provider": "azurerm",
+                                "command": "init",
+                                "workingDirectory": "$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/",
+                                "commandOptions": "",
+                                "environmentServiceNameAzureRM": "",
+                                "environmentServiceNameAWS": "",
+                                "environmentServiceNameGCP": "",
+                                "backendServiceArm": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
+                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
+                                "backendAzureRmContainerName": "$(terraformstoragecontainer)",
+                                "backendAzureRmKey": "$(applicationname)-$(environmentname)-terraform.tfstate",
+                                "backendServiceAWS": "",
+                                "backendAWSBucketName": "",
+                                "backendAWSKey": "",
+                                "backendServiceGCP": "",
+                                "backendGCPBucketName": "",
+                                "backendGCPPrefix": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "fe504acc-6115-40cb-89ff-191386b5e7bf",
+                            "version": "2.*",
+                            "name": "Terraform : plan",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "provider": "azurerm",
+                                "command": "plan",
+                                "workingDirectory": "$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/",
+                                "commandOptions": "",
+                                "environmentServiceNameAzureRM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "environmentServiceNameAWS": "",
+                                "environmentServiceNameGCP": "",
+                                "backendServiceArm": "",
+                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
+                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
+                                "backendAzureRmContainerName": "terraform",
+                                "backendAzureRmKey": "$(storagekey)",
+                                "backendServiceAWS": "",
+                                "backendAWSBucketName": "",
+                                "backendAWSKey": "",
+                                "backendServiceGCP": "",
+                                "backendGCPBucketName": "",
+                                "backendGCPPrefix": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "fe504acc-6115-40cb-89ff-191386b5e7bf",
+                            "version": "2.*",
+                            "name": "Terraform : apply -auto-approve",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "provider": "azurerm",
+                                "command": "apply",
+                                "workingDirectory": "$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/",
+                                "commandOptions": "-auto-approve",
+                                "environmentServiceNameAzureRM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "environmentServiceNameAWS": "",
+                                "environmentServiceNameGCP": "",
+                                "backendServiceArm": "",
+                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
+                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
+                                "backendAzureRmContainerName": "terraform",
+                                "backendAzureRmKey": "$(storagekey)",
+                                "backendServiceAWS": "",
+                                "backendAWSBucketName": "",
+                                "backendAWSKey": "",
+                                "backendServiceGCP": "",
+                                "backendGCPBucketName": "",
+                                "backendGCPPrefix": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+                            "version": "4.*",
+                            "name": "Azure App Service Deploy: app-$(applicationname)-$(environmentname)",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "ConnectionType": "AzureRM",
+                                "ConnectedServiceName": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
+                                "PublishProfilePath": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
+                                "PublishProfilePassword": "",
+                                "WebAppKind": "app",
+                                "WebAppName": "app-$(applicationname)-$(environmentname)",
+                                "DeployToSlotOrASEFlag": "false",
+                                "ResourceGroupName": "",
+                                "SlotName": "production",
+                                "DockerNamespace": "",
+                                "DockerRepository": "",
+                                "DockerImageTag": "",
+                                "VirtualApplication": "",
+                                "Package": "$(System.DefaultWorkingDirectory)/**/*.zip",
+                                "RuntimeStack": "",
+                                "RuntimeStackFunction": "",
+                                "StartupCommand": "",
+                                "ScriptType": "",
+                                "InlineScript": ":: You can provide your deployment commands here. One command per line.",
+                                "ScriptPath": "",
+                                "WebConfigParameters": "",
+                                "AppSettings": "",
+                                "ConfigurationSettings": "",
+                                "UseWebDeploy": "false",
+                                "DeploymentType": "webDeploy",
+                                "TakeAppOfflineFlag": "false",
+                                "SetParametersFile": "",
+                                "RemoveAdditionalFilesFlag": "false",
+                                "ExcludeFilesFromAppDataFlag": "false",
+                                "AdditionalArguments": "",
+                                "RenameFilesFlag": "false",
+                                "XmlTransformation": "false",
+                                "XmlVariableSubstitution": "false",
+                                "JSONFiles": ""
+                            }
+                        }
+                    ]
+                }
+            ],
+            "environmentOptions": {
+                "emailNotificationType": "OnlyOnFailure",
+                "emailRecipients": "release.environment.owner;release.creator",
+                "skipArtifactsDownload": false,
+                "timeoutInMinutes": 0,
+                "enableAccessToken": false,
+                "publishDeploymentStatus": true,
+                "badgeEnabled": false,
+                "autoLinkWorkItems": false,
+                "pullRequestDeploymentEnabled": false
+            },
+            "demands": [],
+            "conditions": [
+                {
+                    "name": "ReleaseStarted",
+                    "conditionType": 1,
+                    "value": ""
+                }
+            ],
+            "executionPolicy": {
+                "concurrencyCount": 1,
+                "queueDepthCount": 0
+            },
+            "schedules": [],
+            "currentRelease": {
+                "id": 0,
+                "url": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/releases/0",
+                "_links": {}
+            },
+            "retentionPolicy": {
+                "daysToKeep": 30,
+                "releasesToKeep": 3,
+                "retainBuild": true
+            },
+            "processParameters": {},
+            "properties": {
+                "LinkBoardsWorkItems": {
+                    "$type": "System.String",
+                    "$value": "False"
+                }
+            },
+            "preDeploymentGates": {
+                "id": 0,
+                "gatesOptions": null,
+                "gates": []
+            },
+            "postDeploymentGates": {
+                "id": 0,
+                "gatesOptions": null,
+                "gates": []
+            },
+            "environmentTriggers": [],
+            "badgeUrl": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/_apis/public/Release/badge/39408b16-43ab-4726-97eb-d6f5cd212cf9/8/8"
+        }
+    ],
+    "artifacts": [
+        {
+            "sourceId": "39408b16-43ab-4726-97eb-d6f5cd212cf9:12",
+            "type": "Build",
+            "alias": "_Terraform-CI",
+            "definitionReference": {
+                "artifactSourceDefinitionUrl": {
+                    "id": "https://dev.azure.com/Woelfinger-TrainingsLab/_permalink/_build/index?collectionId=96e4353b-4126-48cb-a6b3-327503f2c7c3&projectId=39408b16-43ab-4726-97eb-d6f5cd212cf9&definitionId=12",
+                    "name": ""
+                },
+                "defaultVersionBranch": {
+                    "id": "",
+                    "name": ""
+                },
+                "defaultVersionSpecific": {
+                    "id": "",
+                    "name": ""
+                },
+                "defaultVersionTags": {
+                    "id": "",
+                    "name": ""
+                },
+                "defaultVersionType": {
+                    "id": "selectDuringReleaseCreationType",
+                    "name": "Specify at the time of release creation"
+                },
+                "definition": {
+                    "id": "12",
+                    "name": "Terraform-CI"
+                },
+                "definitions": {
+                    "id": "",
+                    "name": ""
+                },
+                "IsMultiDefinitionType": {
+                    "id": "False",
+                    "name": "False"
+                },
+                "project": {
+                    "id": "39408b16-43ab-4726-97eb-d6f5cd212cf9",
+                    "name": "Terraform-20210601"
+                }
+            },
+            "isPrimary": true,
+            "isRetained": false
+        }
+    ],
+    "triggers": [],
+    "releaseNameFormat": "Release-$(rev:r)",
+    "tags": [],
+    "properties": {
+        "DefinitionCreationSource": {
+            "$type": "System.String",
+            "$value": "ReleaseImport"
+        },
+        "IntegrateJiraWorkItems": {
+            "$type": "System.String",
+            "$value": "false"
+        },
+        "IntegrateBoardsWorkItems": {
+            "$type": "System.String",
+            "$value": "False"
+        }
+    },
+    "id": 8,
+    "name": "Terraform-CD_export",
+    "path": "\\",
+    "projectReference": null,
+    "url": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/8",
+    "_links": {
+        "self": {
+            "href": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/8"
+        },
+        "web": {
+            "href": "https://dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_release?definitionId=8"
+        }
+    }
+}
