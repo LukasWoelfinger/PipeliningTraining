@@ -82,8 +82,8 @@ stages:
           az storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)
           
           az storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)   
-        env:
-          AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+        # env:
+        #   AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
     - task: AzurePowerShell@5
       displayName: 'Azure PowerShell script: Get the storage Key'
