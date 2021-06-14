@@ -62,6 +62,8 @@ stages:
     environmentname: 'Test'
   jobs:
   - job:
+    pool:
+      vmImage: 'ubuntu-20.04'
     steps:
     - task: AzureCLI@2
       displayName: 'Azure CLI '
