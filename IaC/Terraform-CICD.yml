@@ -61,7 +61,7 @@ stages:
     applicationname: 'lwpulterraformweb'
     environmentname: 'Test'
   jobs:
-  - deployment:
+  - job:
     steps:
     - task: AzureCLI@2
       displayName: 'Azure CLI '
