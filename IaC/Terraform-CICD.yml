@@ -6,7 +6,7 @@ parameters:
   values:
   - Reuse of SmartHotesl360.20210517
 
-rigger: none
+trigger: none
 #- main
 
 stages:
