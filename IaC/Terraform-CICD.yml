@@ -1,5 +1,13 @@
-trigger:
-- main
+parameters:
+- name: subscriptionPrincipal
+  displayName: Azure Resource Manager connection
+  type: string
+  default: appRegistrationPrincipal
+  values:
+  - Reuse of SmartHotesl360.20210517
+
+rigger: none
+#- main
 
 stages:
 - stage: TerraformCI
@@ -57,7 +65,7 @@ stages:
     location: 'westeurope'
     terraformstoragerg: 'Storage'
     terraformstorageaccount: 'woelfingerterraformstate'
-    subscriptionarm: 'Reuse of SmartHotesl360.20210517'
+    #subscriptionarm: '${{ parameters.subscriptionPrincipal}}'
   #Step 5,8
     applicationname: 'lwpulterraformweb'
     environmentname: 'Test'
@@ -69,7 +77,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Azure CLI '
       inputs:
-        azureSubscription: $(subscriptionarm)
+        azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
@@ -89,7 +97,7 @@ stages:
     - task: AzurePowerShell@5
       displayName: 'Azure PowerShell script: Get storage access key'
       inputs:
-        azureSubscription: $(subscriptionarm)
+        azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         ScriptType: InlineScript
         Inline: |
           # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
@@ -114,7 +122,7 @@ stages:
       displayName: 'Terraform : init'
       inputs:
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        backendServiceArm: $(subscriptionarm)
+        backendServiceArm: '${{ parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
         backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
         backendAzureRmContainerName: '$(terraformstoragecontainer)'
@@ -125,19 +133,19 @@ stages:
       inputs:
         command: plan
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        environmentServiceNameAzureRM: $(subscriptionarm)
+        environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform : apply'
       inputs:
         command: apply
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        environmentServiceNameAzureRM: $(subscriptionarm)
+        environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     - task: AzureRmWebAppDeployment@4
       displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
       inputs:
-        azureSubscription: $(subscriptionarm)
+        azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         appType: webAppLinux
         WebAppName: 'app-$(applicationname)-$(environmentname)'
 
