@@ -69,7 +69,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Azure CLI '
       inputs:
-        azureSubscription: '$(subscriptionarm)'
+        azureSubscription: $(subscriptionarm)
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
@@ -89,7 +89,7 @@ stages:
     - task: AzurePowerShell@5
       displayName: 'Azure PowerShell script: Get storage access key'
       inputs:
-        azureSubscription: '$(subscriptionarm)'
+        azureSubscription: $(subscriptionarm)
         ScriptType: InlineScript
         Inline: |
           # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
@@ -114,7 +114,7 @@ stages:
       displayName: 'Terraform : init'
       inputs:
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        backendServiceArm: '$(subscriptionarm)'
+        backendServiceArm: $(subscriptionarm)
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
         backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
         backendAzureRmContainerName: '$(terraformstoragecontainer)'
@@ -125,19 +125,19 @@ stages:
       inputs:
         command: plan
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        environmentServiceNameAzureRM: '$(subscriptionarm)'
+        environmentServiceNameAzureRM: $(subscriptionarm)
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform : apply'
       inputs:
         command: apply
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
-        environmentServiceNameAzureRM: '$(subscriptionarm)'
+        environmentServiceNameAzureRM: $(subscriptionarm)
 
     - task: AzureRmWebAppDeployment@4
       displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
       inputs:
-        azureSubscription: '$(subscriptionarm)'
+        azureSubscription: $(subscriptionarm)
         appType: webAppLinux
         WebAppName: 'app-$(applicationname)-$(environmentname)'
 
