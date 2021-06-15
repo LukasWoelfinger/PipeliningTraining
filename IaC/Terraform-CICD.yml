@@ -5,6 +5,29 @@ parameters:
   default: appRegistrationPrincipal
   values:
   - Reuse of SmartHotesl360.20210517
+- name: buildImage
+  displayName: Build Pool Image
+  type: string
+  default: vs2017-win2016
+  values:
+  - windows-latest
+  - vs2017-win2016
+  - ubuntu-latest
+  - ubuntu-16.04
+  - macOS-latest
+  - macOS-10.14
+- name: deployImage
+  displayName: Deplyoment Pool Image
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - vs2017-win2016
+  - ubuntu-latest
+  - ubuntu-16.04
+  - macOS-latest
+  - macOS-10.14
+
 
 trigger: none
 #- main
@@ -15,7 +38,7 @@ stages:
   jobs:
   - job:
     pool:
-      vmImage: 'windows-latest'
+      vmImage: '${{ Parameters.buildImage }}'
     steps:
     - task: DotNetCoreCLI@2
       displayName: Restore
@@ -72,12 +95,12 @@ stages:
   jobs:
   - job:
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: '${{ Parameters.deployImage }}'
     steps:
     - task: AzureCLI@2
       displayName: 'Azure CLI '
       inputs:
-        azureSubscription: '${{ parameters.subscriptionPrincipal}}'
+        azureSubscription: '${{ parameters.subscriptionPrincipal }}'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
