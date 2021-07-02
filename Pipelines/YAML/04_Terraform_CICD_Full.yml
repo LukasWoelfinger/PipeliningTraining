@@ -1,0 +1,206 @@
+parameters:
+- name: subscriptionPrincipal
+  displayName: Azure Resource Manager connection
+  type: string
+  default: ''
+
+- name: buildImage
+  displayName: Build Pool Image
+  type: string
+  default: vs2017-win2016
+  values:
+  - windows-latest
+  - vs2017-win2016
+  - ubuntu-latest
+  - ubuntu-16.04
+  - macOS-latest
+  - macOS-10.14
+
+- name: deployImage
+  displayName: Deplyoment Pool Image
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - vs2017-win2016
+  - ubuntu-latest
+  - ubuntu-16.04
+  - macOS-latest
+  - macOS-10.14
+
+# variables to be defined for pipeline:
+#   location:                  e.g. 'westeurope'
+#   terraformstoragerg:        e.g. 'rg-Storage'
+#   terraformstorageaccount:   e.g. 'terraformstatestorage'
+#   terraformstoragecontainer: e.g. 'terraform'
+#   applicationname:           e.g. 'lwpulterraformweb'
+#   environmentname:           e.g. 'Test' or 'Dev'
+#   storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.# BuildConfiguration: e.g. debug
+#   BuildConfiguration:        e.g. debug
+#   subscriptionid:            GUID of subscription
+
+trigger: none
+#- main
+
+stages:
+- stage: TerraformCI
+  displayName: Stage to compile terraform infrastructure continously.
+  jobs:
+  - job:
+    pool:
+      vmImage: '${{ Parameters.buildImage }}'
+    steps:
+    # 1. Restore the code from repository
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
+
+    # 2. Compile (dotnet build)
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(BuildConfiguration)'
+
+    # 3. Execute unit tests
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: test
+        projects: '$(Parameters.TestProjects)'
+        arguments: '--configuration $(BuildConfiguration)'
+
+    # 4. Publish web application into zip file
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+        zipAfterPublish: True
+
+     # 5. Copy terraform files to artifacts folder for later execution
+    - task: CopyFiles@2
+      displayName: 'Copy Terraform files to artifacts'
+      inputs:
+        SourceFolder: Terraform
+        TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
+
+     # 6. Publish final articact to artifacts store
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+
+
+- stage: TerraformCD
+  displayName: Stage to deploy terraform infrastructure continously.
+  dependsOn: TerraformCI
+  jobs:
+  - job:
+    pool:
+      vmImage: '${{ Parameters.deployImage }}'
+    steps:
+    # Preparation: get build artifact from previous stage
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        
+    # 1. Ensure the storage backend for terraform exists (Az modules are used!)
+    - task: AzureCLI@2
+      displayName: 'Azure CLI '
+      inputs:
+        azureSubscription: '${{parameters.subscriptionPrincipal}}'
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          # Create Azure resource group for Terraform state storage
+          az group create --location $(location) --name $(terraformstoragerg)
+          
+          # Create storage account
+          az storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS
+          
+          # Create storage container
+          az storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)
+          
+          az storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)   
+      env:
+        AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+
+    # 2. Get the access key for terraform backend storage 
+    - task: AzurePowerShell@5
+      displayName: 'Azure PowerShell script: Set storage access key'
+      inputs:
+        azureSubscription: '${{parameters.subscriptionPrincipal}}'
+        ScriptType: InlineScript
+        Inline: |
+          # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
+          
+          $key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]
+          
+          Write-Host "##vso[task.setvariable variable=storagekey]$key"
+        azurePowerShellVersion: LatestVersion
+
+    # 3. Replace the tokens inside the Terraform script files
+    - task: replacetokens@3
+      displayName: 'Replace tokens in **/*.tf'
+      inputs:
+        targetFiles: '**/*.tf'
+        actionOnMissing: 'warn'
+        keepToken: false
+        tokenPrefix: '__'
+        tokenSuffix: '__'
+
+    # 4. Install Terraform on agent
+    - task: TerraformInstaller@0
+      displayName: 'Terraform : install'
+      inputs:
+        terraformVersion: '1.0.1'
+
+    # 5. Initialize Terraform on the agent
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform : init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        backendServiceArm: '${{parameters.subscriptionPrincipal}}'
+        backendAzureRmResourceGroupName: '$(terraformstoragerg)'
+        backendAzureRmStorageAccountName: '$(terraformstorageaccount)'
+        backendAzureRmContainerName: '$(terraformstoragecontainer)'
+        backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
+
+    # 6. Plan the infrastructure changes
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform : plan'
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
+
+    # 7. Auto apply the infrastructure 
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform : apply'
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        commandOptions: '--auto-approve'
+        environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
+
+    # 8. Publish the web application to the infrastructure
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: '${{parameters.subscriptionPrincipal}}'
+        appType: 'webAppLinux'
+        WebAppName: 'app-$(applicationname)-$(environmentname)'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
