@@ -199,6 +199,8 @@ stages:
     - task: AzureRmWebAppDeployment@4
       displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
       inputs:
+        ConnectionType: 'AzureRM'
         azureSubscription: '${{parameters.subscriptionPrincipal}}'
-        appType: webAppLinux
+        appType: 'webAppLinux'
         WebAppName: 'app-$(applicationname)-$(environmentname)'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
