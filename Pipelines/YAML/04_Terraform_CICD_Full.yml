@@ -2,6 +2,7 @@ parameters:
 - name: subscriptionPrincipal
   displayName: Azure Resource Manager connection
   type: string
+  default: ''
 
 - name: buildImage
   displayName: Build Pool Image
@@ -110,6 +111,7 @@ stages:
         buildType: 'current'
         downloadType: 'specific'
         downloadPath: '$(System.ArtifactsDirectory)'
+        
     # 1. Ensure the storage backend for terraform exists (Az modules are used!)
     - task: AzureCLI@2
       displayName: 'Azure CLI '
@@ -167,7 +169,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(build.artifactstagingdirectory)/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
         backendServiceArm: '${{parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
         backendAzureRmStorageAccountName: '$(terraformstorageaccount)'
@@ -180,7 +182,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(build.artifactstagingdirectory)/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
         environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
 
     # 7. Auto apply the infrastructure 
@@ -189,7 +191,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(build.artifactstagingdirectory)/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
         commandOptions: '--auto-approve'
         environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
 
