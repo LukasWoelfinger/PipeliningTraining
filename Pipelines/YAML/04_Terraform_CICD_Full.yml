@@ -151,7 +151,6 @@ stages:
 
     # 4. Install Terraform on agent
     - task: TerraformInstaller@0
-      displayName: 'Install Terraform 0.15.5'
       inputs:
         terraformVersion: '0.15.5'
 
