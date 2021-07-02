@@ -28,6 +28,14 @@ parameters:
   - macOS-latest
   - macOS-10.14
 
+# variables to be defined for pipeline:
+#   location:                  e.g. 'westeurope'
+#   terraformstoragerg:        e.g. 'rg-Storage'
+#   terraformstorageaccount:   e.g. 'terraformstatestorage'
+#   terraformstoragecontainer: e.g. 'terraform'
+#   applicationname:           e.g. 'lwpulterraformweb'
+#   environmentname:           e.g. 'Test' or 'Dev'
+#   storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.
 
 trigger: none
 #- main
@@ -40,18 +48,21 @@ stages:
     pool:
       vmImage: '${{ Parameters.buildImage }}'
     steps:
+    # 1. Restore the code from repository
     - task: DotNetCoreCLI@2
       displayName: Restore
       inputs:
         command: restore
         projects: '$(Parameters.RestoreBuildProjects)'
 
+    # 2. Compile (dotnet build)
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         projects: '$(Parameters.RestoreBuildProjects)'
         arguments: '--configuration $(BuildConfiguration)'
 
+    # 3. Execute unit tests
     - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
@@ -59,6 +70,7 @@ stages:
         projects: '$(Parameters.TestProjects)'
         arguments: '--configuration $(BuildConfiguration)'
 
+    # 4. Publish web application into zip file
     - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
@@ -67,13 +79,14 @@ stages:
         arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
         zipAfterPublish: True
 
-    # Copy additional files like ARM templates or Terraform scripts for execution later.
+     # 5. Copy terraform files to artifacts folder for later execution
     - task: CopyFiles@2
       displayName: 'Copy Terraform files to artifacts'
       inputs:
         SourceFolder: Terraform
         TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
 
+     # 6. Publish final articact to artifacts store
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
       inputs:
@@ -83,24 +96,16 @@ stages:
 - stage: TerraformCD
   displayName: Stage to deploy terraform infrastructure continously.
   dependsOn: TerraformCI
-  variables:
-  #Step 1,2,5
-    location: 'westeurope'
-    terraformstoragerg: 'Storage'
-    terraformstorageaccount: 'woelfingerterraformstate'
-    #subscriptionarm: '${{ parameters.subscriptionPrincipal}}'
-  #Step 5,8
-    applicationname: 'lwpulterraformweb'
-    environmentname: 'Test'
   jobs:
   - job:
     pool:
       vmImage: '${{ Parameters.deployImage }}'
     steps:
+    # 1. Ensure the storage backend for terraform exists (Az modules are used!)
     - task: AzureCLI@2
       displayName: 'Azure CLI '
       inputs:
-        azureSubscription: '${{ parameters.subscriptionPrincipal }}'
+        azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
@@ -114,11 +119,12 @@ stages:
           az storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)
           
           az storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)   
-        # env:
-        #   AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+      env:
+        AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
+    # 2. Get the access key for terraform backend storage 
     - task: AzurePowerShell@5
-      displayName: 'Azure PowerShell script: Get storage access key'
+      displayName: 'Azure PowerShell script: Set storage access key'
       inputs:
         azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         ScriptType: InlineScript
@@ -127,20 +133,22 @@ stages:
           
           $key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]
           
-          Write-Host "##vso[task.setvariable variable=storagekey]$key" 
-        azurePowerShellVersion: LatestVersion
+          Write-Host "##vso[task.setvariable variable=storagekey]$key"
+          azurePowerShellVersion: LatestVersion
 
+    # 3. Replace the tokens inside the Terraform script files
     - task: qetza.replacetokens.replacetokens-task.replacetokens@3
       displayName: 'Replace tokens in **/*.tf'
       inputs:
         targetFiles: '**/*.tf'
 
+    # 4. Install Terraform on agent
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
       displayName: 'Install Terraform 0.15.5'
       inputs:
         terraformVersion: 0.15.5
 
-    #Your build pipeline references an undefined variable named ‘terraformstoragecontainer’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+    # 5. Initialize Terraform on the agent
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform : init'
       inputs:
@@ -151,6 +159,7 @@ stages:
         backendAzureRmContainerName: '$(terraformstoragecontainer)'
         backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
 
+    # 6. Plan the infrastructure changes
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform : plan'
       inputs:
@@ -158,6 +167,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
+    # 7. Auto apply the infrastructure 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform : apply'
       inputs:
@@ -165,10 +175,10 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
+    # 8. Publish the web application to the infrastructure
     - task: AzureRmWebAppDeployment@4
       displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
       inputs:
         azureSubscription: '${{ parameters.subscriptionPrincipal}}'
         appType: webAppLinux
         WebAppName: 'app-$(applicationname)-$(environmentname)'
-
