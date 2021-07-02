@@ -35,7 +35,8 @@ parameters:
 #   terraformstoragecontainer: e.g. 'terraform'
 #   applicationname:           e.g. 'lwpulterraformweb'
 #   environmentname:           e.g. 'Test' or 'Dev'
-#   storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.
+#   storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.# BuildConfiguration: e.g. debug
+#   BuildConfiguration:        e.g. debug
 
 trigger: none
 #- main
@@ -52,14 +53,16 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Restore
       inputs:
-        command: restore
-        projects: '$(Parameters.RestoreBuildProjects)'
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
 
     # 2. Compile (dotnet build)
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
-        projects: '$(Parameters.RestoreBuildProjects)'
+        command: 'build'
+        projects: '**/*.csproj'
         arguments: '--configuration $(BuildConfiguration)'
 
     # 3. Execute unit tests
@@ -134,45 +137,52 @@ stages:
           $key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]
           
           Write-Host "##vso[task.setvariable variable=storagekey]$key"
-          azurePowerShellVersion: LatestVersion
+        azurePowerShellVersion: LatestVersion
 
     # 3. Replace the tokens inside the Terraform script files
-    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+    - task: replacetokens@3
       displayName: 'Replace tokens in **/*.tf'
       inputs:
         targetFiles: '**/*.tf'
+        actionOnMissing: 'warn'
+        keepToken: false
+        tokenPrefix: '__'
+        tokenSuffix: '__'
 
     # 4. Install Terraform on agent
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+    - task: TerraformInstaller@0
       displayName: 'Install Terraform 0.15.5'
       inputs:
         terraformVersion: 0.15.5
 
     # 5. Initialize Terraform on the agent
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    - task: TerraformTaskV2@2
       displayName: 'Terraform : init'
       inputs:
-        workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
         backendServiceArm: '${{ parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
-        backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
+        backendAzureRmStorageAccountName: '$(terraformstorageaccount)'
         backendAzureRmContainerName: '$(terraformstoragecontainer)'
         backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
 
     # 6. Plan the infrastructure changes
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    - task: TerraformTaskV2@2
       displayName: 'Terraform : plan'
       inputs:
+        provider: 'azurerm'
         command: plan
-        workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     # 7. Auto apply the infrastructure 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    - task: TerraformTaskV2@2
       displayName: 'Terraform : apply'
       inputs:
+        provider: 'azurerm'
         command: apply
-        workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
+        commandOptions: '--auto-apply'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     # 8. Publish the web application to the infrastructure
