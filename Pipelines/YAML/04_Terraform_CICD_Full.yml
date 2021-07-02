@@ -153,12 +153,14 @@ stages:
     - task: TerraformInstaller@0
       displayName: 'Install Terraform 0.15.5'
       inputs:
-        terraformVersion: 0.15.5
+        terraformVersion: '0.15.5'
 
     # 5. Initialize Terraform on the agent
     - task: TerraformTaskV2@2
       displayName: 'Terraform : init'
       inputs:
+        provider: 'azurerm'
+        command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
         backendServiceArm: '${{ parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
@@ -171,7 +173,7 @@ stages:
       displayName: 'Terraform : plan'
       inputs:
         provider: 'azurerm'
-        command: plan
+        command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
@@ -180,7 +182,7 @@ stages:
       displayName: 'Terraform : apply'
       inputs:
         provider: 'azurerm'
-        command: apply
+        command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/drop/Terraform/'
         commandOptions: '--auto-apply'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
