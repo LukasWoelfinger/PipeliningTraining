@@ -137,42 +137,52 @@ stages:
           azurePowerShellVersion: LatestVersion
 
     # 3. Replace the tokens inside the Terraform script files
-    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
-      displayName: 'Replace tokens in **/*.tf'
+    - task: replacetokens@3
       inputs:
         targetFiles: '**/*.tf'
+        encoding: 'auto'
+        writeBOM: true
+        actionOnMissing: 'fail'
+        keepToken: false
+        tokenPrefix: '__'
+        tokenSuffix: '__'
+        useLegacyPattern: false
+        enableTransforms: false
+        enableTelemetry: true
 
     # 4. Install Terraform on agent
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      displayName: 'Install Terraform 0.15.5'
+    - task: TerraformInstaller@0
       inputs:
-        terraformVersion: 0.15.5
+        terraformVersion: '0.15.5'
 
     # 5. Initialize Terraform on the agent
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    - task: TerraformTaskV2@2
       displayName: 'Terraform : init'
       inputs:
+        provider: 'azurerm'
+        command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
         backendServiceArm: '${{ parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(terraformstoragerg)'
-        backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
+        backendAzureRmStorageAccountName: '$(terraformstorageaccount)'
         backendAzureRmContainerName: '$(terraformstoragecontainer)'
         backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
 
     # 6. Plan the infrastructure changes
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
-      displayName: 'Terraform : plan'
+    - task: TerraformTaskV2@2
       inputs:
-        command: plan
+        provider: 'azurerm'
+        command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     # 7. Auto apply the infrastructure 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
-      displayName: 'Terraform : apply'
+    - task: TerraformTaskV2@2
       inputs:
-        command: apply
+        provider: 'azurerm'
+        command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/_Terraform-CI/drop/Terraform/'
+        commandOptions: '--auto-apply'
         environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal}}'
 
     # 8. Publish the web application to the infrastructure
