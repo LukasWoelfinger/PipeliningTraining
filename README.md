@@ -11,3 +11,23 @@ On root level we have the different areas required by complex pieplies separated
 | -------- | ----------------------------------------- |
 | IaC      | All about creating infrastructure as code |
 | Piplines | Learn abound classic and YAML pipelines   |
+
+## Prerequisites
+
+All Demos are based on a simple .NET CoreCLI web app compilation and publishing pipeline
+
+1. To create infrastructure in Azure a subscription is required at [Azure Portal](https://portal.azure.com)
+
+2. For DevOps Pipelines
+
+   - Organization with priviledges to install extensions
+   - Project with at least 'Build Administrator' role
+
+3. For Terrafor execution
+
+   - installed Terraform v0.15.0+
+
+4. For Terraform pipelines following extensions are used
+
+   - [Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens)
+   - [Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks)
