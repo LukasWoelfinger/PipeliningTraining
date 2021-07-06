@@ -25,7 +25,8 @@ All Demos are based on a simple .NET CoreCLI web app compilation and publishing 
 
 3. For Terrafor execution
 
-   - installed Terraform v0.15.0+
+   - installed Terraform v0.15.0+ (see terraform folder Readme.md)
+   - [Azure CLI v2.0.79+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
 
 4. For Terraform pipelines following extensions are used
 
