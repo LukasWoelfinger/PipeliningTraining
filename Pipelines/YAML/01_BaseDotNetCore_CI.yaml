@@ -1,6 +1,9 @@
 pool:
   name: Hosted VS2017
 
+# Variables to setup
+# BuildConfiguration: e.g. 'Release'
+
 steps:
   
   # 1. Restore the code from repository
@@ -8,13 +11,13 @@ steps:
   displayName: Restore
   inputs:
     command: restore
-    projects: '$(Parameters.RestoreBuildProjects)'
+    projects: '**/*.csproj'
 
   # 2. Compile (dotnet build)
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
-    projects: '$(Parameters.RestoreBuildProjects)'
+    projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
   # 3. Execute unit tests
@@ -22,7 +25,7 @@ steps:
   displayName: Test
   inputs:
     command: test
-    projects: '$(Parameters.TestProjects)'
+    projects: '**/[Tt]ests/**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
   # 4. Publish web application into zip file
