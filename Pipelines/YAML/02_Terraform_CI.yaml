@@ -28,6 +28,7 @@ parameters:
 
 jobs:
 - job:
+  displayName: 'CI job'
   pool:
     vmImage: '${{ Parameters.buildImage }}'
   steps:
