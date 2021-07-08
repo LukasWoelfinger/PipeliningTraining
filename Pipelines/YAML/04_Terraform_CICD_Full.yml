@@ -4,6 +4,26 @@ parameters:
   type: string
   default: ''
 
+- name: RestoreBuildProjects
+  displayName: Project file to restore and build
+  type: string
+  default: '**/*.csproj'
+
+- name: TestProjects
+  displayName: Project file containing test automations.
+  type: string
+  default: '**/[Tt]ests/**/*.csproj'
+
+- name: EnableTests
+  displayName: Execute tests
+  type: boolean
+  default: true
+
+- name: deploymentPackage
+  displayName: Location and filename of deployment zip
+  type: string
+  default: '$(System.ArtifactsDirectory)/**/*.zip'
+
 - name: buildImage
   displayName: Build Pool Image
   type: string
@@ -55,26 +75,27 @@ stages:
       displayName: Restore
       inputs:
         command: 'restore'
-        projects: '**/*.csproj'
+        projects: '${{ Parameters.RestoreBuildProjects }}'
         feedsToUse: 'select'
 
-    # 2. Compile (dotnet build)
+      # 2. Compile (dotnet build)
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         command: 'build'
-        projects: '**/*.csproj'
-        arguments: '--configuration $(BuildConfiguration)'
+        projects: '${{ Parameters.RestoreBuildProjects }}'
+        arguments: '--configuration $(BuildConfiguration)' 
 
-    # 3. Execute unit tests
+      # 3. Execute unit tests
     - task: DotNetCoreCLI@2
       displayName: Test
+      condition: '${{ Parameters.EnableTests }}'
       inputs:
-        command: test
-        projects: '$(Parameters.TestProjects)'
+        command: 'test'
+        projects: '${{ Parameters.TestProjects }}'
         arguments: '--configuration $(BuildConfiguration)'
 
-    # 4. Publish web application into zip file
+      # 4. Publish web application into zip file
     - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
@@ -83,14 +104,14 @@ stages:
         arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
         zipAfterPublish: True
 
-     # 5. Copy terraform files to artifacts folder for later execution
+      # 5. Copy terraform files to artifacts folder for later execution
     - task: CopyFiles@2
       displayName: 'Copy Terraform files to artifacts'
       inputs:
         SourceFolder: Terraform
         TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
 
-     # 6. Publish final articact to artifacts store
+      # 6. Publish final articact to artifacts store
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
       inputs:
@@ -203,4 +224,4 @@ stages:
         azureSubscription: '${{parameters.subscriptionPrincipal}}'
         appType: 'webAppLinux'
         WebAppName: 'app-$(applicationname)-$(environmentname)'
-        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
+        packageForLinux: '${{ Parameters.deploymentPackage }}'
