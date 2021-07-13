@@ -67,6 +67,7 @@ stages:
   displayName: Stage to compile terraform infrastructure continously.
   jobs:
   - job:
+    displayName: Compile and Test
     pool:
       vmImage: '${{ Parameters.buildImage }}'
     steps:
@@ -123,6 +124,7 @@ stages:
   dependsOn: TerraformCI
   jobs:
   - job:
+    displayName: Validate and configure IaC and deploy
     pool:
       vmImage: '${{ Parameters.deployImage }}'
     steps:
@@ -135,7 +137,7 @@ stages:
         
     # 1. Ensure the storage backend for terraform exists (Az modules are used!)
     - task: AzureCLI@2
-      displayName: 'Azure CLI '
+      displayName: 'Setup Terraform backend storage'
       inputs:
         azureSubscription: '${{parameters.subscriptionPrincipal}}'
         scriptType: pscore
@@ -180,7 +182,7 @@ stages:
 
     # 4. Install Terraform on agent
     - task: TerraformInstaller@0
-      displayName: 'Terraform : install'
+      displayName: 'Terraform: install'
       inputs:
         terraformVersion: '1.0.1'
 
@@ -199,7 +201,7 @@ stages:
 
     # 6. Plan the infrastructure changes
     - task: TerraformTaskV2@2
-      displayName: 'Terraform : plan'
+      displayName: 'Terraform: plan'
       inputs:
         provider: 'azurerm'
         command: 'plan'
@@ -208,7 +210,7 @@ stages:
 
     # 7. Auto apply the infrastructure 
     - task: TerraformTaskV2@2
-      displayName: 'Terraform : apply'
+      displayName: 'Terraform: apply'
       inputs:
         provider: 'azurerm'
         command: 'apply'
