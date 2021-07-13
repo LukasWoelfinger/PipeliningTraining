@@ -5,6 +5,12 @@ resources:
     # TODO: Update YOUR endpoint and project path
     endpoint: LukasWoelfinger
     name: LukasWoelfinger/eShopOnWeb
+  - repository: GitHubTerraform
+    type: github
+    # TODO: Update YOUR endpoint and project path
+    endpoint: LukasWoelfinger
+    name: LukasWoelfinger/PipeliningTraining
+    ref: Demos/ms_eShopOnWeb
 
 
 parameters:
@@ -60,7 +66,7 @@ parameters:
 - name: terraformFolder
   displayName: Terraform path on checkout
   type: string
-  default: '/PipelineTraining/Demos/MS_eShopOnWeb/Terraform'
+  default: '/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform'
 
 # variables to be defined for pipeline:
 #   location:            e.g. 'westeurope'
