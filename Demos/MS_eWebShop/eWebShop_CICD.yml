@@ -1,13 +1,22 @@
+resources:
+  repositories:
+  - repository: GitHubeShop
+    type: github
+    # TODO: Update YOUR endpoint and project path
+    endpoint: LukasWoelfinger
+    name: LukasWoelfinger/eShopOnWeb
+  - repository: GitHubPipeline
+    type: github
+    # TODO: Update YOUR endpoint and project path
+    endpoint: LukasWoelfinger
+    name: LukasWoelfinger/PipelineTraining
+    ref: Demo_ms_eWebShop
+
 parameters:
 - name: subscriptionPrincipal
   displayName: Azure Resource Manager connection
   type: string
   default: 'Training-eWebShop-Demo'
-
-- name: gitHubServiceConnection
-  displayName: gitHub Service Connection name
-  type: string
-  default: GitHubServiceConnection
 
 - name: RestoreBuildProjects
   displayName: Project file to restore and build
@@ -63,19 +72,6 @@ parameters:
 #   tf_storagekey:       e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.# BuildConfiguration: e.g. debug
 #   configuration:       e.g. debug # Remark this will set the --configuration parameter of dotnet CLI (hidden feature)
 #   subscriptionid:      GUID of subscription
-
-
-resources:
-  repositories:
-  - repository: GitHubeShop
-    type: github
-    endpoint: '${{ Parameters.gitHubServiceConnection }}'
-    name: '${{ Parameters.gitHubServiceConnection }}/eShopOnWeb'
-  - repository: GitHubPipeline
-    type: github
-    endpoint: '${{ Parameters.gitHubServiceConnection }}'
-    name: '${{ Parameters.gitHubServiceConnection }}/PipelineTraining'
-    ref: Demo_ms_eWebShop
 
 trigger: none
 #- main
