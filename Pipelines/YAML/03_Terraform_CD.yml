@@ -26,12 +26,12 @@ trigger: none
 
 # variables to be defined for pipeline:
 #   location:                  e.g. 'westeurope'
-#   terraformstoragerg:        e.g. 'rg-Storage'
-#   terraformstorageaccount:   e.g. 'terraformstatestorage'
-#   terraformstoragecontainer: e.g. 'terraform'
-#   applicationname:           e.g. 'lwpulterraformweb'
-#   environmentname:           e.g. 'Test' or 'Dev'
-#   storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.
+#   tf_rgstorage:        e.g. 'rg-Storage'
+#   tf_storageaccount:   e.g. 'terraformstatestorage'
+#   tf_storagecontainer: e.g. 'terraform'
+#   tf_applicationname:           e.g. 'lwpulterraformweb'
+#   tf_environmentname:           e.g. 'Test' or 'Dev'
+#   tf_storagekey:                e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.
 
 jobs:
 - job:
@@ -55,15 +55,15 @@ jobs:
       scriptLocation: inlineScript
       inlineScript: |
         # Create Azure resource group for Terraform state storage
-        az group create --location $(location) --name $(terraformstoragerg)
+        az group create --location $(location) --name $(tf_rgstorage)
         
         # Create storage account
-        az storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS
+        az storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS
         
         # Create storage container
-        az storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)
+        az storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)
         
-        az storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)   
+        az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)   
       env:
         AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
@@ -76,9 +76,9 @@ jobs:
       Inline: |
         # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
         
-        $key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]
+        $key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]
         
-        Write-Host "##vso[task.setvariable variable=storagekey]$key"
+        Write-Host "##vso[task.setvariable variable=tf_storagekey]$key"
       azurePowerShellVersion: LatestVersion
 
   # 3. Replace the tokens inside the Terraform script files
@@ -103,10 +103,10 @@ jobs:
     inputs:
       workingDirectory: '$(System.ArtifactsDirectory)/drop/Terraform/'
       backendServiceArm: '${{ parameters.subscriptionPrincipal}}'
-      backendAzureRmResourceGroupName: '$(terraformstoragerg)'
-      backendAzureRmStorageAccountName: '$(terraformstorageaccount) '
-      backendAzureRmContainerName: '$(terraformstoragecontainer)'
-      backendAzureRmKey: '$(applicationname)-$(environmentname)-terraform.tfstate'
+      backendAzureRmResourceGroupName: '$(tf_rgstorage)'
+      backendAzureRmStorageAccountName: '$(tf_storageaccount) '
+      backendAzureRmContainerName: '$(tf_storagecontainer)'
+      backendAzureRmKey: '$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate'
 
   # 6. Plan the infrastructure changes
   - task: TerraformTaskV2@2
@@ -126,9 +126,9 @@ jobs:
 
   # 8. Publish the web application to the infrastructure
   - task: AzureRmWebAppDeployment@4
-    displayName: 'Azure App Service Deploy: app-$(applicationname)-$(environmentname)'
+    displayName: 'Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)'
     inputs:
       azureSubscription: '${{ parameters.subscriptionPrincipal}}'
       appType: webAppLinux
-      WebAppName: 'app-$(applicationname)-$(environmentname)'
+      WebAppName: 'app-$(tf_applicationname)-$(tf_environmentname)'
       packageForLinux: '${{ Parameters.deploymentPackage }}'

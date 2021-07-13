@@ -3,20 +3,20 @@
   ATTENTION: No variables allowed. For local test hardcode values. For pipeline use 
   variable substitutions.
 
-  storage_account_name = "__terraformstorageaccount__"
-  container_name       = "__terraformstoragecontainer__"
-  key                  = "__applicationname__-__environmentname__-terraform.tfstate"
-  access_key           = "__storagekey__" # put "Set at RUNTIME! with powershell!" in variable and replace it with powershell
+  storage_account_name = "__tf_storageaccount__"
+  container_name       = "__tf_storagecontainer__"
+  key                  = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
+  access_key           = "__tf_storagekey__" # put "Set at RUNTIME! with powershell!" in variable and replace it with powershell
 
   REMARK: If Terraform throws erroro "Error: There was an error when attempting to execute the process 'C:\hostedtoolcache\windows\terraform\0.15.4\x64\terraform.exe'. This may indicate the process failed to start. Error: spawn C:\hostedtoolcache\windows\terraform\0.15.4\x64\terraform.exe ENOENT"
   Solution: Correct the working directory AND finalize it with / at the end!
 */
 terraform {
   # backend "azurerm" {
-  #   storage_account_name = "__terraformstorageaccount__"
-  #   container_name       = "__terraformstoragecontainer__"
-  #   key                  = "__applicationname__-__environmentname__-terraform.tfstate"
-  #   access_key           = "__storagekey__"
+  #   storage_account_name = "__tf_storageaccount__"
+  #   container_name       = "__tf_storagecontainer__"
+  #   key                  = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
+  #   access_key           = "__tf_storagekey__"
   # }
   required_providers {
     azurerm = {

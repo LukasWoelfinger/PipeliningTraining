@@ -7,12 +7,12 @@
         "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
         "_links": {
             "avatar": {
-                "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
             }
         },
         "id": "5d12063d-203a-42de-8275-f625787be8a5",
         "uniqueName": "ab@c.com",
-        "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+        "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
         "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
     },
     "createdOn": "2021-06-10T10:52:23.980Z",
@@ -21,12 +21,12 @@
         "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
         "_links": {
             "avatar": {
-                "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
             }
         },
         "id": "5d12063d-203a-42de-8275-f625787be8a5",
         "uniqueName": "ab@c.com",
-        "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+        "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
         "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
     },
     "modifiedOn": "2021-06-11T10:42:46.147Z",
@@ -48,17 +48,17 @@
             "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
             "_links": {
                 "avatar": {
-                    "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                    "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
                 }
             },
             "id": "5d12063d-203a-42de-8275-f625787be8a5",
             "uniqueName": "ab@c.com",
-            "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+            "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
             "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
         }
     },
     "variables": {
-        "applicationname": {
+        "tf_applicationname": {
             "value": "lwpulterraformweb"
         },
         "appserviceplan": {
@@ -68,19 +68,19 @@
         "location": {
             "value": "westeurope"
         },
-        "storagekey": {
+        "tf_storagekey": {
             "value": "PipelineWillGetThisValueRuntime"
         },
         "subscriptionid": {
             "value": "38820533-3004-415d-a57a-910d2b6d6097"
         },
-        "terraformstorageaccount": {
-            "value": "woelfingerterraformstate"
+        "tf_storageaccount": {
+            "value": "YourAzureStorage"
         },
-        "terraformstoragecontainer": {
+        "tf_storagecontainer": {
             "value": "terraform"
         },
-        "terraformstoragerg": {
+        "tf_rgstorage": {
             "value": "Storage"
         }
     },
@@ -95,12 +95,12 @@
                 "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
                 "_links": {
                     "avatar": {
-                        "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                        "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
                     }
                 },
                 "id": "5d12063d-203a-42de-8275-f625787be8a5",
                 "uniqueName": "ab@c.com",
-                "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+                "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
                 "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
             },
             "variables": {
@@ -201,7 +201,7 @@
                                 "scriptType": "pscore",
                                 "scriptLocation": "inlineScript",
                                 "scriptPath": "",
-                                "inlineScript": "# Create Azure resource group for Terraform state storage\naz group create --location $(location) --name $(terraformstoragerg)\n\n# Create storage account\naz storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS\n\n# Create storage container\naz storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)\n\naz storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)\n\n",
+                                "inlineScript": "# Create Azure resource group for Terraform state storage\naz group create --location $(location) --name $(tf_rgstorage)\n\n# Create storage account\naz storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS\n\n# Create storage container\naz storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)\n\naz storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)\n\n",
                                 "scriptArguments": "",
                                 "powerShellErrorActionPreference": "stop",
                                 "addSpnToEnvironment": "false",
@@ -228,7 +228,7 @@
                                 "ConnectedServiceNameARM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
                                 "ScriptType": "InlineScript",
                                 "ScriptPath": "",
-                                "Inline": "# Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account\n\n$key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]\n\nWrite-Host \"##vso[task.setvariable variable=storagekey]$key\"",
+                                "Inline": "# Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account\n\n$key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]\n\nWrite-Host \"##vso[task.setvariable variable=tf_storagekey]$key\"",
                                 "ScriptArguments": "",
                                 "errorActionPreference": "stop",
                                 "FailOnStandardError": "false",
@@ -314,10 +314,10 @@
                                 "environmentServiceNameAWS": "",
                                 "environmentServiceNameGCP": "",
                                 "backendServiceArm": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
-                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
-                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
-                                "backendAzureRmContainerName": "$(terraformstoragecontainer)",
-                                "backendAzureRmKey": "$(applicationname)-$(environmentname)-terraform.tfstate",
+                                "backendAzureRmResourceGroupName": "$(tf_rgstorage)",
+                                "backendAzureRmStorageAccountName": "$(tf_storageaccount) ",
+                                "backendAzureRmContainerName": "$(tf_storagecontainer)",
+                                "backendAzureRmKey": "$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate",
                                 "backendServiceAWS": "",
                                 "backendAWSBucketName": "",
                                 "backendAWSKey": "",
@@ -348,10 +348,10 @@
                                 "environmentServiceNameAWS": "",
                                 "environmentServiceNameGCP": "",
                                 "backendServiceArm": "",
-                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
-                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
+                                "backendAzureRmResourceGroupName": "$(tf_rgstorage)",
+                                "backendAzureRmStorageAccountName": "$(tf_storageaccount) ",
                                 "backendAzureRmContainerName": "terraform",
-                                "backendAzureRmKey": "$(storagekey)",
+                                "backendAzureRmKey": "$(tf_storagekey)",
                                 "backendServiceAWS": "",
                                 "backendAWSBucketName": "",
                                 "backendAWSKey": "",
@@ -382,10 +382,10 @@
                                 "environmentServiceNameAWS": "",
                                 "environmentServiceNameGCP": "",
                                 "backendServiceArm": "",
-                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
-                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
+                                "backendAzureRmResourceGroupName": "$(tf_rgstorage)",
+                                "backendAzureRmStorageAccountName": "$(tf_storageaccount) ",
                                 "backendAzureRmContainerName": "terraform",
-                                "backendAzureRmKey": "$(storagekey)",
+                                "backendAzureRmKey": "$(tf_storagekey)",
                                 "backendServiceAWS": "",
                                 "backendAWSBucketName": "",
                                 "backendAWSKey": "",
@@ -398,7 +398,7 @@
                             "environment": {},
                             "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
                             "version": "4.*",
-                            "name": "Azure App Service Deploy: app-$(applicationname)-$(environmentname)",
+                            "name": "Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)",
                             "refName": "",
                             "enabled": true,
                             "alwaysRun": false,
@@ -413,7 +413,7 @@
                                 "PublishProfilePath": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
                                 "PublishProfilePassword": "",
                                 "WebAppKind": "app",
-                                "WebAppName": "app-$(applicationname)-$(environmentname)",
+                                "WebAppName": "app-$(tf_applicationname)-$(tf_environmentname)",
                                 "DeployToSlotOrASEFlag": "false",
                                 "ResourceGroupName": "",
                                 "SlotName": "production",
@@ -473,7 +473,7 @@
             "schedules": [],
             "currentRelease": {
                 "id": 22,
-                "url": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/releases/22",
+                "url": "https://vsrm.dev.azure.com/YourDevOpsOrganization/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/releases/22",
                 "_links": {}
             },
             "retentionPolicy": {
@@ -499,7 +499,7 @@
                 "gates": []
             },
             "environmentTriggers": [],
-            "badgeUrl": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/_apis/public/Release/badge/39408b16-43ab-4726-97eb-d6f5cd212cf9/16/16"
+            "badgeUrl": "https://vsrm.dev.azure.com/YourDevOpsOrganization/_apis/public/Release/badge/39408b16-43ab-4726-97eb-d6f5cd212cf9/16/16"
         },
         {
             "id": 17,
@@ -510,12 +510,12 @@
                 "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/5d12063d-203a-42de-8275-f625787be8a5",
                 "_links": {
                     "avatar": {
-                        "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
+                        "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
                     }
                 },
                 "id": "5d12063d-203a-42de-8275-f625787be8a5",
                 "uniqueName": "ab@c.com",
-                "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
+                "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx",
                 "descriptor": "aad.OGE1MzIyMmYtNTQ0Mi03NWM5LWJlZDctZWU0ZjFlOTkzNjgx"
             },
             "variables": {
@@ -535,12 +535,12 @@
                             "url": "https://spsprodweu1.vssps.visualstudio.com/A8be927aa-ff58-4dae-aab4-ba8dc1dfa084/_apis/Identities/9e9a2d6c-d43a-4f89-a2fe-6ebcc8ea4948",
                             "_links": {
                                 "avatar": {
-                                    "href": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/vssgp.Uy0xLTktMTU1MTM3NDI0NS0xMTAzMTM2ODktMzgwNTYxOTAxMS0yOTY3MjYyNzQ1LTM3MTQxODcyNDQtMC0wLTAtMC0x"
+                                    "href": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/vssgp.Uy0xLTktMTU1MTM3NDI0NS0xMTAzMTM2ODktMzgwNTYxOTAxMS0yOTY3MjYyNzQ1LTM3MTQxODcyNDQtMC0wLTAtMC0x"
                                 }
                             },
                             "id": "9e9a2d6c-d43a-4f89-a2fe-6ebcc8ea4948",
                             "uniqueName": "vstfs:///Classification/TeamProject/142e21af-ac6e-4f3e-98c8-757fe059b641\\Project Administrators",
-                            "imageUrl": "https://dev.azure.com/Woelfinger-TrainingsLab/_apis/GraphProfile/MemberAvatars/vssgp.Uy0xLTktMTU1MTM3NDI0NS0xMTAzMTM2ODktMzgwNTYxOTAxMS0yOTY3MjYyNzQ1LTM3MTQxODcyNDQtMC0wLTAtMC0x",
+                            "imageUrl": "https://dev.azure.com/YourDevOpsOrganization/_apis/GraphProfile/MemberAvatars/vssgp.Uy0xLTktMTU1MTM3NDI0NS0xMTAzMTM2ODktMzgwNTYxOTAxMS0yOTY3MjYyNzQ1LTM3MTQxODcyNDQtMC0wLTAtMC0x",
                             "isContainer": true,
                             "descriptor": "vssgp.Uy0xLTktMTU1MTM3NDI0NS0xMTAzMTM2ODktMzgwNTYxOTAxMS0yOTY3MjYyNzQ1LTM3MTQxODcyNDQtMC0wLTAtMC0x"
                         },
@@ -623,7 +623,7 @@
                                 "scriptType": "pscore",
                                 "scriptLocation": "inlineScript",
                                 "scriptPath": "",
-                                "inlineScript": "# Create Azure resource group for Terraform state storage\naz group create --location $(location) --name $(terraformstoragerg)\n\n# Create storage account\naz storage account create --name $(terraformstorageaccount) --resource-group $(terraformstoragerg) --location $(location) --sku Standard_LRS\n\n# Create storage container\naz storage container create --name $(terraformstoragecontainer) --account-name $(terraformstorageaccount)\n\naz storage account keys list -g $(terraformstoragerg) -n $(terraformstorageaccount)\n\n",
+                                "inlineScript": "# Create Azure resource group for Terraform state storage\naz group create --location $(location) --name $(tf_rgstorage)\n\n# Create storage account\naz storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS\n\n# Create storage container\naz storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)\n\naz storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)\n\n",
                                 "scriptArguments": "",
                                 "powerShellErrorActionPreference": "stop",
                                 "addSpnToEnvironment": "false",
@@ -650,7 +650,7 @@
                                 "ConnectedServiceNameARM": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
                                 "ScriptType": "InlineScript",
                                 "ScriptPath": "",
-                                "Inline": "# Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account\n\n$key=(Get-AzStorageAccountKey -ResourceGroupName $(terraformstoragerg) -AccountName $(terraformstorageaccount)).Value[0]\n\nWrite-Host \"##vso[task.setvariable variable=storagekey]$key\"",
+                                "Inline": "# Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account\n\n$key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]\n\nWrite-Host \"##vso[task.setvariable variable=tf_storagekey]$key\"",
                                 "ScriptArguments": "",
                                 "errorActionPreference": "stop",
                                 "FailOnStandardError": "false",
@@ -736,10 +736,10 @@
                                 "environmentServiceNameAWS": "",
                                 "environmentServiceNameGCP": "",
                                 "backendServiceArm": "5e35ceaf-84fe-4eae-8ce0-a9dedc321c3b",
-                                "backendAzureRmResourceGroupName": "$(terraformstoragerg)",
-                                "backendAzureRmStorageAccountName": "$(terraformstorageaccount) ",
-                                "backendAzureRmContainerName": "$(terraformstoragecontainer)",
-                                "backendAzureRmKey": "$(applicationname)-$(environmentname)-terraform.tfstate",
+                                "backendAzureRmResourceGroupName": "$(tf_rgstorage)",
+                                "backendAzureRmStorageAccountName": "$(tf_storageaccount) ",
+                                "backendAzureRmContainerName": "$(tf_storagecontainer)",
+                                "backendAzureRmKey": "$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate",
                                 "backendServiceAWS": "",
                                 "backendAWSBucketName": "",
                                 "backendAWSKey": "",
@@ -820,7 +820,7 @@
                             "environment": {},
                             "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
                             "version": "4.*",
-                            "name": "Azure App Service Deploy: app-$(applicationname)-$(environmentname)",
+                            "name": "Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)",
                             "refName": "",
                             "enabled": true,
                             "alwaysRun": false,
@@ -835,7 +835,7 @@
                                 "PublishProfilePath": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
                                 "PublishProfilePassword": "",
                                 "WebAppKind": "webAppLinux",
-                                "WebAppName": "app-$(applicationname)-$(environmentname)",
+                                "WebAppName": "app-$(tf_applicationname)-$(tf_environmentname)",
                                 "DeployToSlotOrASEFlag": "false",
                                 "ResourceGroupName": "",
                                 "SlotName": "production",
@@ -895,7 +895,7 @@
             "schedules": [],
             "currentRelease": {
                 "id": 22,
-                "url": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/releases/22",
+                "url": "https://vsrm.dev.azure.com/YourDevOpsOrganization/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/releases/22",
                 "_links": {}
             },
             "retentionPolicy": {
@@ -925,7 +925,7 @@
                 "gates": []
             },
             "environmentTriggers": [],
-            "badgeUrl": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/_apis/public/Release/badge/39408b16-43ab-4726-97eb-d6f5cd212cf9/16/17"
+            "badgeUrl": "https://vsrm.dev.azure.com/YourDevOpsOrganization/_apis/public/Release/badge/39408b16-43ab-4726-97eb-d6f5cd212cf9/16/17"
         }
     ],
     "artifacts": [
@@ -935,7 +935,7 @@
             "alias": "_Terraform-CI",
             "definitionReference": {
                 "artifactSourceDefinitionUrl": {
-                    "id": "https://dev.azure.com/Woelfinger-TrainingsLab/_permalink/_build/index?collectionId=96e4353b-4126-48cb-a6b3-327503f2c7c3&projectId=39408b16-43ab-4726-97eb-d6f5cd212cf9&definitionId=12",
+                    "id": "https://dev.azure.com/YourDevOpsOrganization/_permalink/_build/index?collectionId=96e4353b-4126-48cb-a6b3-327503f2c7c3&projectId=39408b16-43ab-4726-97eb-d6f5cd212cf9&definitionId=12",
                     "name": ""
                 },
                 "defaultVersionBranch": {
@@ -996,13 +996,13 @@
     "name": "Terraform-CD_export - Copy",
     "path": "\\",
     "projectReference": null,
-    "url": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/16",
+    "url": "https://vsrm.dev.azure.com/YourDevOpsOrganization/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/16",
     "_links": {
         "self": {
-            "href": "https://vsrm.dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/16"
+            "href": "https://vsrm.dev.azure.com/YourDevOpsOrganization/39408b16-43ab-4726-97eb-d6f5cd212cf9/_apis/Release/definitions/16"
         },
         "web": {
-            "href": "https://dev.azure.com/Woelfinger-TrainingsLab/39408b16-43ab-4726-97eb-d6f5cd212cf9/_release?definitionId=16"
+            "href": "https://dev.azure.com/YourDevOpsOrganization/39408b16-43ab-4726-97eb-d6f5cd212cf9/_release?definitionId=16"
         }
     }
 }

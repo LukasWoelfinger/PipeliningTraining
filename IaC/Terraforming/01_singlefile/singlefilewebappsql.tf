@@ -21,8 +21,8 @@ variable "tags" {
   description = "The tags for all resources. Will be used for resource name generation, too."
   type        = map(any)
   default = {
-    Application = "__applicationname__"
-    Environment = "__environmentname__"
+    Application = "__tf_applicationname__"
+    Environment = "__tf_environmentname__"
   }
 }
 
@@ -30,19 +30,19 @@ variable "tags" {
   Variables to inform user about the backend storage location of the terraform state.
   ATTENTION: Do not use this variables in main file. Backend configuration block requires static values!
 */
-variable "terraformstorageaccount" {
+variable "tf_storageaccount" {
   description = "Caches the name of the terraform storrage account used for safing the state. Used for output information only!"
-  default     = "__terraformstorageaccount__"
+  default     = "__tf_storageaccount__"
 }
 
-variable "terraformcontainername" {
+variable "tf_containername" {
   description = "Output cache of the container name storring the terraform state file. Used for output information only!"
-  default     = "__terraformcontainername__"
+  default     = "__tf_containername__"
 }
 
 variable "key" {
   description = "Output cache of the terraform state file name. Used for output information only!"
-  default     = "__applicationname__-__environmentname__-terraform.tfstate"
+  default     = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
 }
 
 /*
@@ -68,20 +68,20 @@ variable "SQLPassword" {
   variable substitutions.
 
   backend "azurerm" {
-    storage_account_name = "__terraformstorageaccount__"
-    container_name       = "__terraformstoragecontainer__"
-    key                  = "__applicationname__-__environmentname__-terraform.tfstate"
-    access_key           = "__storagekey__" # put "Set at RUNTIME! with powershell!" in variable and replace it with powershell
+    storage_account_name = "__tf_storageaccount__"
+    container_name       = "__tf_storagecontainer__"
+    key                  = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
+    access_key           = "__tf_storagekey__" # put "Set at RUNTIME! with powershell!" in variable and replace it with powershell
   }
   REMARK: If Terraform throws erroro "Error: There was an error when attempting to execute the process 'C:\hostedtoolcache\windows\terraform\0.15.4\x64\terraform.exe'. This may indicate the process failed to start. Error: spawn C:\hostedtoolcache\windows\terraform\0.15.4\x64\terraform.exe ENOENT"
   Solution: Correct the working directory AND finalize it with / at the end!
 */
 terraform {
   # backend "azurerm" {
-  #   storage_account_name = "__terraformstorageaccount__"
-  #   container_name       = "__terraformstoragecontainer__"
-  #   key                  = "__applicationname__-__environmentname__-terraform.tfstate"
-  #   access_key           = "__storagekey__"
+  #   storage_account_name = "__tf_storageaccount__"
+  #   container_name       = "__tf_storagecontainer__"
+  #   key                  = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
+  #   access_key           = "__tf_storagekey__"
   # }
   required_providers {
     azurerm = {
@@ -147,7 +147,7 @@ output "rg_name" {
 }
 
 output "terraform_state" {
-  value = "Stored at '${var.terraformstorageaccount}' at container '${var.terraformcontainername}' in file ${var.tags.Application}-terraform.tfstate"
+  value = "Stored at '${var.tf_storageaccount}' at container '${var.tf_containername}' in file ${var.tags.Application}-terraform.tfstate"
 }
 
 # Web output

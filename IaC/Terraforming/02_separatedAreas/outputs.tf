@@ -3,7 +3,7 @@ output "rg_name" {
 }
 
 output "terraform_state" {
-  value = "Stored at '${var.terraformstorageaccount}' at container '${var.terraformcontainername}' in file ${var.tags.Application}-terraform.tfstate"
+  value = "Stored at '${var.tf_storageaccount}' at container '${var.tf_containername}' in file ${var.tags.Application}-terraform.tfstate"
 }
 
 # Web output
