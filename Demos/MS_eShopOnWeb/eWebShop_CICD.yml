@@ -66,7 +66,7 @@ parameters:
 - name: terraformFolder
   displayName: Terraform path on checkout
   type: string
-  default: '/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform'
+  default: '$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform'
 
 # variables to be defined for pipeline:
 #   location:            e.g. 'westeurope'
@@ -94,6 +94,13 @@ stages:
     # 0. Checkout sources
     - checkout: self
     - checkout: GitHubeShop
+
+      # 5. Copy terraform files to artifacts folder for later execution
+    - task: CopyFiles@2
+      displayName: 'Copy Terraform files to artifacts'
+      inputs:
+        SourceFolder: '${{ Parameters.terraformFolder }}'
+        TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
 
     # 1. Restore the code from repository
     - task: DotNetCoreCLI@2
@@ -128,13 +135,6 @@ stages:
         publishWebProjects: True
         arguments: '--output $(build.artifactstagingdirectory)'
         zipAfterPublish: True
-
-      # 5. Copy terraform files to artifacts folder for later execution
-    - task: CopyFiles@2
-      displayName: 'Copy Terraform files to artifacts'
-      inputs:
-        SourceFolder: '${{ Parameters.terraformFolder }}'
-        TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
 
       # 6. Publish final articact to artifacts store
     - task: PublishBuildArtifacts@1
