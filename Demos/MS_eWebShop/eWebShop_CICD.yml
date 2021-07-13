@@ -5,12 +5,7 @@ resources:
     # TODO: Update YOUR endpoint and project path
     endpoint: LukasWoelfinger
     name: LukasWoelfinger/eShopOnWeb
-  - repository: GitHubPipeline
-    type: github
-    # TODO: Update YOUR endpoint and project path
-    endpoint: LukasWoelfinger
-    name: LukasWoelfinger/PipelineTraining
-    ref: Demo_ms_eWebShop
+
 
 parameters:
 - name: subscriptionPrincipal
@@ -86,7 +81,7 @@ stages:
       vmImage: '${{ Parameters.buildImage }}'
     steps:
     # 0. Checkout sources
-    - checkout: GitHubPipeline
+    - checkout: self
     - checkout: GitHubeShop
 
     # 1. Restore the code from repository
