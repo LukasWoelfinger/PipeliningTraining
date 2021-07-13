@@ -10,7 +10,7 @@ resources:
     # TODO: Update YOUR endpoint and project path
     endpoint: LukasWoelfinger
     name: LukasWoelfinger/PipeliningTraining
-
+    ref: demos/ms_eShopOnWeb
 
 
 parameters:
