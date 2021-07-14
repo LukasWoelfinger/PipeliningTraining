@@ -35,9 +35,9 @@ variable "tf_storageaccount" {
   default     = "__tf_storageaccount__"
 }
 
-variable "tf_containername" {
+variable "tf_storagecontainer" {
   description = "Output cache of the container name storring the terraform state file. Used for output information only!"
-  default     = "__tf_containername__"
+  default     = "__tf_storagecontainer__"
 }
 
 variable "key" {
@@ -147,7 +147,7 @@ output "rg_name" {
 }
 
 output "terraform_state" {
-  value = "Stored at '${var.tf_storageaccount}' at container '${var.tf_containername}' in file ${var.tags.Application}-terraform.tfstate"
+  value = "Stored at '${var.tf_storageaccount}' at container '${var.tf_storagecontainer}' in file ${var.tags.Application}-terraform.tfstate"
 }
 
 # Web output
