@@ -196,9 +196,9 @@ stages:
 
     # 3. Replace the tokens inside the Terraform script files
     - task: replacetokens@3
-      displayName: 'Replace tokens in **/*.tf'
+      displayName: 'Replace tokens in **/MS_eShopOnWeb/**/*.tf'
       inputs:
-        targetFiles: '**/*.tf'
+        targetFiles: '**/MS_eShopOnWeb/**/*.tf'
         actionOnMissing: 'warn'
         keepToken: false
         tokenPrefix: '__'
