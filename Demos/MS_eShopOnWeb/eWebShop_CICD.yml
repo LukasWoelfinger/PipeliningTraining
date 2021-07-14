@@ -198,7 +198,7 @@ stages:
     - task: replacetokens@3
       displayName: 'Replace tokens in **/MS_eShopOnWeb/**/*.tf'
       inputs:
-        targetFiles: '**/MS_eShopOnWeb/**/*.tf'
+        targetFiles: '$(System.ArtifactsDirectory)/**/*.tf'
         actionOnMissing: 'warn'
         keepToken: false
         tokenPrefix: '__'
@@ -216,7 +216,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        workingDirectory: '$(System.ArtifactsDirectory)/Terraform/'
         backendServiceArm: '${{parameters.subscriptionPrincipal}}'
         backendAzureRmResourceGroupName: '$(tf_rgstorage)'
         backendAzureRmStorageAccountName: '$(tf_storageaccount)'
@@ -229,7 +229,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        workingDirectory: '$(System.ArtifactsDirectory)/Terraform/'
         environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
 
     # 7. Auto apply the infrastructure 
@@ -238,7 +238,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform/'
+        workingDirectory: '$(System.ArtifactsDirectory)/Terraform/'
         commandOptions: '--auto-approve'
         environmentServiceNameAzureRM: '${{parameters.subscriptionPrincipal}}'
 
