@@ -169,9 +169,9 @@ stages:
       displayName: 'Setup Terraform backend storage'
       inputs:
         azureSubscription: '${{ parameters.subscriptionPrincipal }}'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlinepwsh: |
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
           # Create Azure resource group for Terraform state storage
           az group create --location $(location) --name $(tf_rgstorage)
           
@@ -181,7 +181,7 @@ stages:
           # Create storage container
           az storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)
           
-          az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)   
+          az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)
       env:
         AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
@@ -192,6 +192,7 @@ stages:
         azureSubscription: '${{ parameters.subscriptionPrincipal }}'
         ScriptType: InlineScript
         Inline: |
+
           # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
           
           $key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]
