@@ -10,14 +10,14 @@ resources:
     # TODO: Update YOUR endpoint and project path
     endpoint: LukasWoelfinger
     name: LukasWoelfinger/PipeliningTraining
-    ref: demopipeanalysis
+    ref: demos/ms_eShopOnWeb
 
 
 parameters:
 - name: subscriptionPrincipal
   displayName: Azure Resource Manager connection
   type: string
-  default: 'Reuse of SmartHotesl360.20210517'
+  default: 'Training-eWebShop-Demo'
 
 - name: RestoreBuildProjects
   displayName: Project file to restore and build
