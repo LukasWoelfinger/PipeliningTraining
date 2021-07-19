@@ -18,7 +18,6 @@ variable "tags" {
   description = "The tags for all resources. Will be used for resource name generation, too."
   type        = map(any)
   default = {
-    # Used for service name generation
     Application = "__tf_applicationname__"
     Environment = "__tf_environmentname__"
   }
