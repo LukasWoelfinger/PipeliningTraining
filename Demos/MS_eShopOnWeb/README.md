@@ -17,11 +17,11 @@ This demo scripts support you to quickly setup your own demo infrastructure for 
    | Variable | example value |
    |-----|-----|
    | location | 'westeurope' |
-   | tf*rgstorage | 'rg-Storage'|
+   | tf_rgstorage | 'rg-Storage'|
    | tf_storageaccount | 'terraformstatestorage'|
    | tf_storagecontainer | 'terraform'|
    | tf_applicationname | 'lwpulterraformweb'|
-   | tf_environmentname | 'Test' or 'Dev' #REMARK: prefix "tf*" required to prevent web.config manipulations from dotnet build CLI (parameter --environmentname exists here to setup ASPNETCORE_ENVIRONMENT)|
+   | tf_environmentname | 'Test' or 'Dev' #REMARK: prefix "tf\*" required to prevent web.config manipulations from dotnet build CLI (parameter --environmentname exists here to setup ASPNETCORE_ENVIRONMENT)|
    | tf_storagekey | 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.# BuildConfiguration: e.g. debug|
    | configuration | debug # Remark this will set the --configuration parameter of dotnet CLI (hidden feature)|
    | subscriptionid | GUID of subscription|
