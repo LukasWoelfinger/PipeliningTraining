@@ -3,14 +3,16 @@ resources:
   - repository: GitHubeShop
     type: github
     # TODO: Update YOUR endpoint and project path
-    endpoint: LukasWoelfinger
-    name: LukasWoelfinger/eShopOnWeb
-  - repository: GitHubTerraform
-    type: github
-    # TODO: Update YOUR endpoint and project path
-    endpoint: LukasWoelfinger
-    name: LukasWoelfinger/PipeliningTraining
-    ref: demos/ms_eShopOnWeb
+    endpoint: YourGitHubConnection
+    name: YourGitHubConnection/eShopOnWeb
+
+    # Example to get the pipeline terraform demo
+  # - repository: GitHubTerraform
+  #   type: github
+  #   # TODO: Update YOUR endpoint and project path
+  #   endpoint: YourGitHubConnection
+  #   name: YourGitHubConnection/PipeliningTraining
+  #   ref: yourbranch #Optional to get a special branch
 
 
 parameters:
@@ -97,7 +99,7 @@ stages:
       vmImage: '${{ Parameters.buildImage }}'
     steps:
     # 0. Checkout sources
-    - checkout: self
+    - checkout: self  # if you use the pipeline from remote self is the pipeline demo project
     - checkout: GitHubeShop
 
     # 1. Restore the code from repository
