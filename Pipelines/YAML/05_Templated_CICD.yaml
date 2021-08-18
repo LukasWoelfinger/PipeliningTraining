@@ -1,0 +1,6 @@
+trigger:
+  - none
+
+jobs:
+  - template: 02_Terraform_CI.yml
+  - template: 03_Terraform_CD.yml
