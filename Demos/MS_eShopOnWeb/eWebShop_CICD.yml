@@ -3,8 +3,8 @@ resources:
   - repository: GitHubeShop
     type: github
     # TODO: Update YOUR endpoint and project path
-    endpoint: YourGitHubConnection
-    name: YourGitHubConnection/eShopOnWeb
+    endpoint: LukasWoelfinger
+    name: LukasWoelfinger/eShopOnWeb
 
     # Example to get the pipeline terraform demo
   # - repository: GitHubTerraform
