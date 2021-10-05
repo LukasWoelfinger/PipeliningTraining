@@ -216,7 +216,7 @@ stages:
     - task: TerraformInstaller@0
       displayName: 'Terraform: install'
       inputs:
-        terraformVersion: '1.0.1'
+        terraformVersion: '1.0.8'
 
     # 5. Initialize Terraform on the agent
     - task: TerraformTaskV2@2
