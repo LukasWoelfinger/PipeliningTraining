@@ -73,7 +73,7 @@ parameters:
 - name: terraformExecFolder
   displayName: Terraform execution path
   type: string
-  default: '$(System.ArtifactsDirectory)/drop/drop/Terraform/'
+  default: '$(System.ArtifactsDirectory)/drop/Terraform/'
 
 # variables to be defined for pipeline:
 #   location:            e.g. 'westeurope'
