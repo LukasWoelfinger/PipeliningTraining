@@ -1,0 +1,68 @@
+parameters:
+  - name: RestoreBuildProjects
+    displayName: Project file to restore and build
+    type: string
+    default: "**/*.csproj"
+
+  - name: TestProjects
+    displayName: Project file containing test automations.
+    type: string
+    default: "**/[Tt]ests/**/*.csproj"
+
+  - name: EnableTests
+    displayName: Execute tests
+    type: boolean
+    default: true
+
+  - name: TerraformFolder
+    displayName: Terraform path on checkout
+    type: string
+    default: "$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform/"
+
+steps:
+  # 1. Restore the code from repository
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: "restore"
+      projects: "${{ Parameters.RestoreBuildProjects }}"
+      feedsToUse: "select"
+
+  # 2. Compile (dotnet build)
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: "build"
+      projects: "${{ Parameters.RestoreBuildProjects }}"
+  # REMARK: This will be set in behind, as soon as there is a variable equal to the name of the parameter!
+  #        arguments: '--configuration $(BuildConfiguration)'
+
+  # 3. Execute unit tests
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    condition: "${{ Parameters.EnableTests }}"
+    inputs:
+      command: "test"
+      projects: "${{ Parameters.TestProjects }}"
+
+  # 4. Publish web application into zip file
+  - task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: publish
+      publishWebProjects: True
+      arguments: "--output $(build.artifactstagingdirectory)"
+      zipAfterPublish: True
+
+  # 5. Copy terraform files to artifacts folder for later execution
+  - task: CopyFiles@2
+    displayName: "Copy Terraform files to artifacts"
+    inputs:
+      SourceFolder: "${{ Parameters.TerraformFolder }}"
+      TargetFolder: "$(build.artifactstagingdirectory)/Terraform"
+
+    # 6. Publish final articact to artifacts store
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact"
+    inputs:
+      PathtoPublish: "$(build.artifactstagingdirectory)"

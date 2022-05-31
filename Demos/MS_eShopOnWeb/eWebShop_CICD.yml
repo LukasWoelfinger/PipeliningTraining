@@ -1,79 +1,79 @@
 resources:
   repositories:
-  - repository: GitHubeShop
-    type: github
-    # TODO: Update YOUR endpoint and project path
-    endpoint: LukasWoelfinger
-    name: LukasWoelfinger/eShopOnWeb
-
-    # Example to get the pipeline terraform demo
-  # - repository: GitHubTerraform
-  #   type: github
-  #   # TODO: Update YOUR endpoint and project path
-  #   endpoint: YourGitHubConnection
-  #   name: YourGitHubConnection/PipeliningTraining
-  #   ref: yourbranch #Optional to get a special branch
-
+    - repository: GitHubSource
+      type: github
+      # TODO: Update YOUR endpoint and project path
+      endpoint: ${{ Parameters.GitHubEndPoint }}
+      name: ${{ Parameters.GitHubProject }}
 
 parameters:
-- name: subscriptionPrincipal
-  displayName: Azure Resource Manager connection
-  type: string
-  default: 'Training-eWebShop-Demo'
+  - name: subscriptionPrincipal
+    displayName: Azure Resource Manager connection
+    type: string
+    default: "Training-eWebShop-Demo"
 
-- name: RestoreBuildProjects
-  displayName: Project file to restore and build
-  type: string
-  default: '**/*.csproj'
+  - name: RestoreBuildProjects
+    displayName: Project file to restore and build
+    type: string
+    default: "**/*.csproj"
 
-- name: TestProjects
-  displayName: Project file containing test automations.
-  type: string
-  default: '**/[Tt]ests/**/*.csproj'
+  - name: TestProjects
+    displayName: Project file containing test automations.
+    type: string
+    default: "**/[Tt]ests/**/*.csproj"
 
-- name: EnableTests
-  displayName: Execute tests
-  type: boolean
-  default: true
+  - name: EnableTests
+    displayName: Execute tests
+    type: boolean
+    default: true
 
-- name: deploymentPackage
-  displayName: Location and filename of deployment zip
-  type: string
-  default: '$(System.ArtifactsDirectory)/**/Web.zip'
+  - name: deploymentPackage
+    displayName: Location and filename of deployment zip
+    type: string
+    default: "$(System.ArtifactsDirectory)/**/Web.zip"
 
-- name: buildImage
-  displayName: Build Pool Image
-  type: string
-  default: ubuntu-latest
-  values:
-  - windows-latest
-  - vs2017-win2016
-  - ubuntu-latest
-  - ubuntu-16.04
-  - macOS-latest
-  - macOS-10.14
+  - name: buildImage
+    displayName: Build Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - windows-latest
+      - ubuntu-latest
+      - macOS-latest
 
-- name: deployImage
-  displayName: Deplyoment Pool Image
-  type: string
-  default: ubuntu-latest
-  values:
-  - windows-latest
-  - vs2017-win2016
-  - ubuntu-latest
-  - ubuntu-16.04
-  - macOS-latest
-  - macOS-10.14
+  - name: deployImage
+    displayName: Deplyoment Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - windows-latest
+      - ubuntu-latest
+      - macOS-latest
 
-- name: terraformFolder
-  displayName: Terraform path on checkout
-  type: string
-  default: '$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform/'
+  - name: terraformFolder
+    displayName: Terraform path on checkout
+    type: string
+    default: "$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform/"
 
-- name: terraformExecFolder
-  displayName: Terraform execution path
-  type: string
-  default: '$(System.ArtifactsDirectory)/drop/Terraform/'
+  - name: terraformExecFolder
+    displayName: Terraform execution path
+    type: string
+    default: "$(System.ArtifactsDirectory)/drop/Terraform/"
+
+  - name: checkOutFromGitHub
+    displayName: Use GitHub code? (Endpoint and project required)
+    type: boolean
+    default: false
+
+  - name: GitHubEndPoint
+    displayName: Name of the endpoint to compile source from GitHub
+    type: string
+    default: "LukasWoelfinger"
+
+  - name: GitHubProject
+    displayName: GitHub project repository to get the code from
+    type: string
+    default: "LukasWoelfinger/eShopOnWeb"
 
 # variables to be defined for pipeline:
 #   location:            e.g. 'westeurope'
@@ -90,172 +90,132 @@ trigger: none
 #- main
 
 stages:
-- stage: TerraformCI
-  displayName: Stage to compile terraform infrastructure continously.
-  jobs:
-  - job:
-    displayName: Compile and Test
-    pool:
-      vmImage: '${{ Parameters.buildImage }}'
-    steps:
-    # 0. Checkout sources
-    - checkout: self  # if you use the pipeline from remote self is the pipeline demo project
-    - checkout: GitHubeShop
+  - stage: TerraformCI
+    displayName: Stage to compile terraform infrastructure continously.
+    jobs:
+      - job:
+        displayName: Compile and Test
+        pool:
+          vmImage: "${{ Parameters.buildImage }}"
+        steps:
+          # 0. Checkout sources
+          - checkout: self # if you use the pipeline from remote self is the pipeline demo project
+    ${{ if Parameters.checkOutFromGitHub }}:
+      - checkout: GitHubSource
 
-    # 1. Restore the code from repository
-    - task: DotNetCoreCLI@2
-      displayName: Restore
-      inputs:
-        command: 'restore'
-        projects: '${{ Parameters.RestoreBuildProjects }}'
-        feedsToUse: 'select'
+      - template: templates/eShop_CI_Template.yml
+        parameters:
+          TerraformFolder: "${{ Parameters.TerraformFolder }}"
+          RestoreBuildProjects: "${{ Parameters.RestoreBuildProjects }}"
+          TestProjects: "${{ Parameters.TestProjects }}"
+          EnableTests: "${{ Parameters.EnableTests }}"
 
-    # 2. Compile (dotnet build)
-    - task: DotNetCoreCLI@2
-      displayName: Build
-      inputs:
-        command: 'build'
-        projects: '${{ Parameters.RestoreBuildProjects }}'
-# REMARK: This will be set in behind, as soon as there is a variable equal to the name of the parameter! 
-#        arguments: '--configuration $(BuildConfiguration)' 
+  - stage: TerraformCD
+    displayName: Stage to deploy terraform infrastructure continously.
+    dependsOn: TerraformCI
+    jobs:
+      - job:
+        displayName: Validate and configure IaC and deploy
+        pool:
+          vmImage: "${{ Parameters.deployImage }}"
+        steps:
+          # Preparation: get build artifact from previous stage
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: "current"
+              downloadType: "specific"
+              downloadPath: "$(System.ArtifactsDirectory)"
 
-    # 3. Execute unit tests
-    - task: DotNetCoreCLI@2
-      displayName: Test
-      condition: '${{ Parameters.EnableTests }}'
-      inputs:
-        command: 'test'
-        projects: '${{ Parameters.TestProjects }}'
+          # 1. Ensure the storage backend for terraform exists (Az modules are used!)
+          - task: AzureCLI@2
+            displayName: "Setup Terraform backend storage"
+            inputs:
+              azureSubscription: "${{ parameters.subscriptionPrincipal }}"
+              scriptType: "pscore"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                # Create Azure resource group for Terraform state storage
+                az group create --location $(location) --name $(tf_rgstorage)
 
-    # 4. Publish web application into zip file
-    - task: DotNetCoreCLI@2
-      displayName: Publish
-      inputs:
-        command: publish
-        publishWebProjects: True
-        arguments: '--output $(build.artifactstagingdirectory)'
-        zipAfterPublish: True
+                # Create storage account
+                az storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS
 
-    # 5. Copy terraform files to artifacts folder for later execution
-    - task: CopyFiles@2
-      displayName: 'Copy Terraform files to artifacts'
-      inputs:
-        SourceFolder: '${{ Parameters.terraformFolder }}'
-        TargetFolder: '$(build.artifactstagingdirectory)/Terraform'
+                # Create storage container
+                az storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)
 
-      # 6. Publish final articact to artifacts store
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+                az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)
+            env:
+              AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
-- stage: TerraformCD
-  displayName: Stage to deploy terraform infrastructure continously.
-  dependsOn: TerraformCI
-  jobs:
-  - job:
-    displayName: Validate and configure IaC and deploy
-    pool:
-      vmImage: '${{ Parameters.deployImage }}'
-    steps:
+          # 2. Get the access key for terraform backend storage
+          - task: AzurePowerShell@5
+            displayName: "Azure PowerShell pwsh: Set storage access key"
+            inputs:
+              azureSubscription: "${{ parameters.subscriptionPrincipal }}"
+              ScriptType: InlineScript
+              Inline: |
 
-    # Preparation: get build artifact from previous stage
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        downloadPath: '$(System.ArtifactsDirectory)'
+                # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
 
-    # 1. Ensure the storage backend for terraform exists (Az modules are used!)
-    - task: AzureCLI@2
-      displayName: 'Setup Terraform backend storage'
-      inputs:
-        azureSubscription: '${{ parameters.subscriptionPrincipal }}'
-        scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Create Azure resource group for Terraform state storage
-          az group create --location $(location) --name $(tf_rgstorage)
-          
-          # Create storage account
-          az storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS
-          
-          # Create storage container
-          az storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)
-          
-          az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)
-      env:
-        AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+                $key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]
 
-    # 2. Get the access key for terraform backend storage 
-    - task: AzurePowerShell@5
-      displayName: 'Azure PowerShell pwsh: Set storage access key'
-      inputs:
-        azureSubscription: '${{ parameters.subscriptionPrincipal }}'
-        ScriptType: InlineScript
-        Inline: |
+                Write-Host "##vso[task.setvariable variable=tf_storagekey]$key"
+              azurePowerShellVersion: LatestVersion
 
-          # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
-          
-          $key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]
-          
-          Write-Host "##vso[task.setvariable variable=tf_storagekey]$key"
-        azurePowerShellVersion: LatestVersion
+          # 3. Replace the tokens inside the Terraform script files
+          - task: replacetokens@3
+            displayName: "Replace tokens in ${{ parameters.terraformExecFolder }}/*.tf"
+            inputs:
+              targetFiles: "${{ parameters.terraformExecFolder }}/*.tf"
+              actionOnMissing: "warn"
+              keepToken: false
+              tokenPrefix: "__"
+              tokenSuffix: "__"
 
-    # 3. Replace the tokens inside the Terraform script files
-    - task: replacetokens@3
-      displayName: 'Replace tokens in ${{ parameters.terraformExecFolder }}/*.tf'
-      inputs:
-        targetFiles: '${{ parameters.terraformExecFolder }}/*.tf'
-        actionOnMissing: 'warn'
-        keepToken: false
-        tokenPrefix: '__'
-        tokenSuffix: '__'
+          # 4. Install Terraform on agent
+          - task: TerraformInstaller@0
+            displayName: "Terraform: install"
+            inputs:
+              terraformVersion: "1.0.8"
 
-    # 4. Install Terraform on agent
-    - task: TerraformInstaller@0
-      displayName: 'Terraform: install'
-      inputs:
-        terraformVersion: '1.0.8'
+          # 5. Initialize Terraform on the agent
+          - task: TerraformTaskV2@2
+            displayName: "Terraform : init"
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "${{ parameters.terraformExecFolder }}/"
+              backendServiceArm: "${{ parameters.subscriptionPrincipal }}"
+              backendAzureRmResourceGroupName: "$(tf_rgstorage)"
+              backendAzureRmStorageAccountName: "$(tf_storageaccount)"
+              backendAzureRmContainerName: "$(tf_storagecontainer)"
+              backendAzureRmKey: "$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate"
 
-    # 5. Initialize Terraform on the agent
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform : init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '${{ parameters.terraformExecFolder }}/'
-        backendServiceArm: '${{ parameters.subscriptionPrincipal }}'
-        backendAzureRmResourceGroupName: '$(tf_rgstorage)'
-        backendAzureRmStorageAccountName: '$(tf_storageaccount)'
-        backendAzureRmContainerName: '$(tf_storagecontainer)'
-        backendAzureRmKey: '$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate'
+          # 6. Plan the infrastructure changes
+          - task: TerraformTaskV2@2
+            displayName: "Terraform: plan"
+            inputs:
+              provider: "azurerm"
+              command: "plan"
+              workingDirectory: "${{ parameters.terraformExecFolder }}"
+              environmentServiceNameAzureRM: "${{ parameters.subscriptionPrincipal }}"
 
-    # 6. Plan the infrastructure changes
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform: plan'
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: '${{ parameters.terraformExecFolder }}'
-        environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal }}'
+          # 7. Auto apply the infrastructure
+          - task: TerraformTaskV2@2
+            displayName: "Terraform: apply"
+            inputs:
+              provider: "azurerm"
+              command: "apply"
+              workingDirectory: "${{ parameters.terraformExecFolder }}"
+              commandOptions: "--auto-approve"
+              environmentServiceNameAzureRM: "${{ parameters.subscriptionPrincipal }}"
 
-    # 7. Auto apply the infrastructure 
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform: apply'
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '${{ parameters.terraformExecFolder }}'
-        commandOptions: '--auto-approve'
-        environmentServiceNameAzureRM: '${{ parameters.subscriptionPrincipal }}'
-
-    # 8. Publish the web application to the infrastructure
-    - task: AzureRmWebAppDeployment@4
-      displayName: 'Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)'
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: '${{ parameters.subscriptionPrincipal }}'
-        appType: 'webAppLinux'
-        WebAppName: 'app-$(tf_applicationname)-$(tf_environmentname)'
-        packageForLinux: '${{ Parameters.deploymentPackage }}'
+          # 8. Publish the web application to the infrastructure
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)"
+            inputs:
+              ConnectionType: "AzureRM"
+              azureSubscription: "${{ parameters.subscriptionPrincipal }}"
+              appType: "webAppLinux"
+              WebAppName: "app-$(tf_applicationname)-$(tf_environmentname)"
+              packageForLinux: "${{ Parameters.deploymentPackage }}"
