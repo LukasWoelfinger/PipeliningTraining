@@ -1,0 +1,71 @@
+resources:
+  repositories:
+    - repository: GitHubSource
+      type: github
+      endpoint: ${{ Parameters.GitHubEndPoint }}
+      name: ${{ Parameters.GitHubProject }}
+
+parameters:
+  - name: RestoreBuildProjects
+    displayName: Project file to restore and build
+    type: string
+    default: "**/*.csproj"
+
+  - name: TestProjects
+    displayName: Project file containing test automations.
+    type: string
+    default: "**/[Tt]ests/**/*.csproj"
+
+  - name: EnableTests
+    displayName: Execute tests
+    type: boolean
+    default: true
+
+  - name: buildImage
+    displayName: Build Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - windows-latest
+      - ubuntu-latest
+      - macOS-latest
+
+  - name: checkOutFromGitHub
+    displayName: Use GitHub code? (Endpoint and project required)
+    type: boolean
+    default: false
+
+  - name: GitHubEndPoint
+    displayName: Name of the endpoint to compile source from GitHub
+    type: string
+    default: "LukasWoelfinger"
+
+  - name: GitHubProject
+    displayName: GitHub project repository to get the code from
+    type: string
+    default: "LukasWoelfinger/eShopOnWeb"
+
+trigger: none
+#- main
+
+stages:
+  - stage: TerraformCI
+    displayName: Stage to compile terraform infrastructure continously.
+    jobs:
+      - job:
+        displayName: Test Execution
+        pool:
+          vmImage: "${{ Parameters.buildImage }}"
+        steps:
+          # 0. Checkout sources
+          - checkout: self # if you use the pipeline from remote self is the pipeline demo project
+    ${{ if Parameters.checkOutFromGitHub }}:
+      - checkout: GitHubSource
+
+      - template: templates/eShop_CI_Template.yml
+        parameters:
+          TerraformFolder: "${{ Parameters.TerraformFolder }}"
+          RestoreBuildProjects: "${{ Parameters.RestoreBuildProjects }}"
+          TestProjects: "${{ Parameters.TestProjects }}"
+          EnableTests: "${{ Parameters.EnableTests }}"
+          PublishArtifacts: false
