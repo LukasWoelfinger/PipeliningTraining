@@ -66,5 +66,6 @@ resource "azurerm_app_service" "main" {
   # Enable setup to use in memory database by setting development evironment configuration
   app_settings = {
     "ASPNETCORE_ENVIRONMENT" = "Development"
+    "UseOnlyInMemoryDatabase" = "true"
   }
 }
