@@ -1,3 +1,11 @@
+resources:
+  repositories:
+    - repository: GitHubeShopSource
+      type: github
+      # TODO: Update YOUR endpoint and project path
+      endpoint: LukasWoelfinger
+      name: LukasWoelfinger/eShopOnWeb
+
 parameters:
   - name: SubscriptionPrincipal
     displayName: Azure Resource Manager connection
@@ -42,10 +50,15 @@ parameters:
       - ubuntu-latest
       - macOS-latest
 
+  - name: TerraformCliVersion
+    displayName: Terraform CLI version to install
+    type: string
+    default: "1.2.2"
+
   - name: terraformFolder
     displayName: Terraform path on checkout
     type: string
-    default: "$(System.DefaultWorkingDirectory)/Terraform/"
+    default: "$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform/"
 
   - name: TerraformExecFolder
     displayName: Terraform execution path
@@ -76,9 +89,10 @@ stages:
           vmImage: "${{ Parameters.BuildImage }}"
         steps:
           # 0. Checkout sources
-          - checkout: self # here we expect all required contant in local repository. This pipeline works as local copy only.
+          - checkout: self # since the YAML is load from GitHub, self is the Pipelining training project containing templates and Terraform
+          - checkout: GitHubeShopSource
 
-          - template: templates/eShop_CI_Template.yml
+          - template: Templates/eShop_CI_Template.yml
             parameters:
               TerraformFolder: "${{ Parameters.TerraformFolder }}"
               RestoreBuildProjects: "${{ Parameters.RestoreBuildProjects }}"
@@ -94,7 +108,7 @@ stages:
         pool:
           vmImage: "${{ Parameters.DeployImage }}"
         steps:
-          - template: templates/eShop_CD_Template.yml
+          - template: Templates/eShop_CD_Template.yml
             parameters:
               SubscriptionPrincipal: "${{ Parameters.SubscriptionPrincipal }}"
               TerraformCliVersion: "${{ Parameters.TerraformCliVersion }}"
