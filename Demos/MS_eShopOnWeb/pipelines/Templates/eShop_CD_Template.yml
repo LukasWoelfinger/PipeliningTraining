@@ -87,6 +87,7 @@ steps:
       command: "plan"
       workingDirectory: "${{ Parameters.TerraformExecFolder }}"
       environmentServiceNameAzureRM: "${{ Parameters.SubscriptionPrincipal }}"
+      commandOptions: "-input=false"
 
   # 6. Auto apply the infrastructure
   - task: TerraformTaskV2@2
@@ -95,7 +96,7 @@ steps:
       provider: "azurerm"
       command: "apply"
       workingDirectory: "${{ Parameters.TerraformExecFolder }}"
-      commandOptions: "--auto-approve"
+      commandOptions: "--auto-approve -input=false"
       environmentServiceNameAzureRM: "${{ Parameters.SubscriptionPrincipal }}"
 
   # 7. Publish the web application to the infrastructure
