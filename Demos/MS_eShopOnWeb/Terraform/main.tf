@@ -22,21 +22,21 @@ terraform {
 */
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription
+  subscription_id = var.SUBSCRIPTION
 }
 
 # create the resource group
 resource "azurerm_resource_group" "main" {
-  name     = "rg-${var.tags.Application}-${var.tags.Environment}"
-  location = var.location
-  tags     = var.tags
+  name     = "rg-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location = var.LOCATION
+  tags     = var.TAGS
 }
 
 # Split into web module from here
 resource "azurerm_service_plan" "main" {
-  name                = "plan-${var.tags.Application}-${var.tags.Environment}"
-  location            = var.location
-  tags                = var.tags
+  name                = "plan-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location            = var.LOCATION
+  tags                = var.TAGS
   resource_group_name = azurerm_resource_group.main.name
   os_type             = "Linux"
 
@@ -44,11 +44,11 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_linux_web_app" "main" {
-  name                = "app-${var.tags.Application}-${var.tags.Environment}"
-  location            = var.location
+  name                = "app-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location            = var.LOCATION
   resource_group_name = azurerm_resource_group.main.name
   service_plan_id     = azurerm_service_plan.main.id
-  tags                = var.tags
+  tags                = var.TAGS
 
   site_config {}
 
