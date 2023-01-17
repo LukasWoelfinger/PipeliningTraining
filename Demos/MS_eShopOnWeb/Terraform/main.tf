@@ -40,7 +40,7 @@ resource "azurerm_service_plan" "main" {
   resource_group_name = azurerm_resource_group.main.name
   os_type             = "Linux"
 
-  sku_name = "FREE"
+  sku_name = "B3"
 }
 
 resource "azurerm_linux_web_app" "main" {
