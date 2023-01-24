@@ -42,15 +42,15 @@ parameters:
       - ubuntu-latest
       - macOS-latest
 
-  - name: terraformFolder
-    displayName: Terraform path on checkout
-    type: string
-    default: "$(System.DefaultWorkingDirectory)/Terraform/"
-
   - name: TerraformExecFolder
     displayName: Terraform execution path
     type: string
-    default: "$(System.ArtifactsDirectory)/drop/Terraform/"
+    default: "$(System.DefaultWorkingDirectory)/Terraform/"
+
+  - name: TerraformCliVersion
+    displayName: Terraform CLI version
+    type: string
+    default: "1.3.7"
 
 # variables to be defined for pipeline:
 #   location:            e.g. 'westeurope'
@@ -80,7 +80,7 @@ stages:
 
           - template: templates/eShop_CI_Template.yml
             parameters:
-              TerraformFolder: "${{ Parameters.TerraformFolder }}"
+              TerraformExecFolder: "${{ Parameters.TerraformExecFolder }}"
               RestoreBuildProjects: "${{ Parameters.RestoreBuildProjects }}"
               TestProjects: "${{ Parameters.TestProjects }}"
               EnableTests: "${{ Parameters.EnableTests }}"
