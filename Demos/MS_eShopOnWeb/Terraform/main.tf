@@ -12,11 +12,8 @@
   Solution: Correct the working directory AND finalize it with / at the end!
 */
 terraform {
-  backend "azurerm" {
-    storage_account_name = "__tf_storageaccount__"
-    container_name       = "__tf_storagecontainer__"
-    key                  = "__tf_applicationname__-__tf_environmentname__-terraform.tfstate"
-    access_key           = "__tf_storagekey__"
+  required_providers {
+    azurerm = {}
   }
 }
 
@@ -25,46 +22,39 @@ terraform {
 */
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription
+  subscription_id = var.SUBSCRIPTION
 }
 
 # create the resource group
 resource "azurerm_resource_group" "main" {
-  name     = "rg-${var.tags.Application}-${var.tags.Environment}"
-  location = var.location
-  tags     = var.tags
+  name     = "rg-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location = var.LOCATION
+  tags     = var.TAGS
 }
 
 # Split into web module from here
-resource "azurerm_app_service_plan" "main" {
-  name                = "plan-${var.tags.Application}-${var.tags.Environment}"
-  location            = var.location
-  tags                = var.tags
+resource "azurerm_service_plan" "main" {
+  name                = "plan-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location            = var.LOCATION
+  tags                = var.TAGS
   resource_group_name = azurerm_resource_group.main.name
+  os_type             = "Linux"
 
-  sku {
-    tier = "Free"
-    size = "F1"
-  }
+  sku_name = "B3"
 }
 
-resource "azurerm_app_service" "main" {
-  name                = "app-${var.tags.Application}-${var.tags.Environment}"
-  location            = var.location
+resource "azurerm_linux_web_app" "main" {
+  name                = "app-${var.TAGS.Application}-${var.TAGS.Environment}"
+  location            = var.LOCATION
   resource_group_name = azurerm_resource_group.main.name
-  app_service_plan_id = azurerm_app_service_plan.main.id
-  tags                = var.tags
+  service_plan_id     = azurerm_service_plan.main.id
+  tags                = var.TAGS
 
-  site_config {
-    # Setup .NET 5
-    dotnet_framework_version = "v5.0"
-
-    # force 32bit to enable free plan usage
-    use_32_bit_worker_process   = true 
-  }
+  site_config {}
 
   # Enable setup to use in memory database by setting development evironment configuration
   app_settings = {
-    "ASPNETCORE_ENVIRONMENT" = "Development"
+    "ASPNETCORE_ENVIRONMENT"  = "Development"
+    "UseOnlyInMemoryDatabase" = "true"
   }
 }

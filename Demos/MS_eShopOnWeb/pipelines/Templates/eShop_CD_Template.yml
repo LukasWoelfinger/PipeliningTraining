@@ -1,0 +1,110 @@
+parameters:
+  - name: SubscriptionPrincipal
+    displayName: Azure Resource Manager connection
+    type: string
+
+  - name: TerraformCliVersion
+    displayName: Terraform CLI version to install
+    type: string
+
+  - name: TerraformExecFolder
+    displayName: Terraform execution path
+    type: string
+    default: "$(System.ArtifactsDirectory)/drop/Terraform/"
+
+  - name: DeploymentPackage
+    displayName: Location and filename of deployment zip
+    type: string
+
+steps:
+  # Preparation: get build artifact from previous stage
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: "current"
+      downloadType: "specific"
+      downloadPath: "$(System.ArtifactsDirectory)"
+
+  # 1. Ensure the storage backend for terraform exists (Az modules are used!)
+  - task: AzureCLI@2
+    displayName: "Setup Terraform backend storage"
+    inputs:
+      azureSubscription: "${{ parameters.SubscriptionPrincipal }}"
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        # Create Azure resource group for Terraform state storage
+        az group create --location $(location) --name $(tf_rgstorage)
+
+        # Create storage account
+        az storage account create --name $(tf_storageaccount) --resource-group $(tf_rgstorage) --location $(location) --sku Standard_LRS
+
+        # Create storage container
+        az storage container create --name $(tf_storagecontainer) --account-name $(tf_storageaccount)
+
+        az storage account keys list -g $(tf_rgstorage) -n $(tf_storageaccount)
+    env:
+      AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+
+  # 2. Get the access key for terraform backend storage
+  - task: AzurePowerShell@5
+    displayName: "Azure PowerShell pwsh: Set storage access key"
+    inputs:
+      azureSubscription: "${{ Parameters.SubscriptionPrincipal }}"
+      ScriptType: InlineScript
+      Inline: |
+
+        # Using this script we will fetch storage key which is required in terraform file to authenticate backend storage account
+
+        $key=(Get-AzStorageAccountKey -ResourceGroupName $(tf_rgstorage) -AccountName $(tf_storageaccount)).Value[0]
+
+        Write-Host "##vso[task.setvariable variable=tf_storagekey]$key"
+      azurePowerShellVersion: LatestVersion
+
+  # 3. Install Terraform on agent
+  - task: TerraformInstaller@0
+    displayName: "Terraform: install"
+    inputs:
+      terraformVersion: ${{ Parameters.TerraformCliVersion }}
+
+  # 4. Initialize Terraform on the agent
+  - task: TerraformTaskV2@2
+    displayName: "Terraform : init"
+    inputs:
+      provider: "azurerm"
+      command: "init"
+      workingDirectory: "${{ Parameters.TerraformExecFolder }}/"
+      backendServiceArm: "${{ Parameters.SubscriptionPrincipal }}"
+      backendAzureRmResourceGroupName: "$(tf_rgstorage)"
+      backendAzureRmStorageAccountName: "$(tf_storageaccount)"
+      backendAzureRmContainerName: "$(tf_storagecontainer)"
+      backendAzureRmKey: "$(tf_applicationname)-$(tf_environmentname)-terraform.tfstate"
+
+  # 5. Plan the infrastructure changes
+  - task: TerraformTaskV2@2
+    displayName: "Terraform: plan"
+    inputs:
+      provider: "azurerm"
+      command: "plan"
+      workingDirectory: "${{ Parameters.TerraformExecFolder }}"
+      environmentServiceNameAzureRM: "${{ Parameters.SubscriptionPrincipal }}"
+      commandOptions: "-input=false"
+
+  # 6. Auto apply the infrastructure
+  - task: TerraformTaskV2@2
+    displayName: "Terraform: apply"
+    inputs:
+      provider: "azurerm"
+      command: "apply"
+      workingDirectory: "${{ Parameters.TerraformExecFolder }}"
+      commandOptions: "--auto-approve -input=false"
+      environmentServiceNameAzureRM: "${{ Parameters.SubscriptionPrincipal }}"
+
+  # 7. Publish the web application to the infrastructure
+  - task: AzureRmWebAppDeployment@4
+    displayName: "Azure App Service Deploy: app-$(tf_applicationname)-$(tf_environmentname)"
+    inputs:
+      ConnectionType: "AzureRM"
+      azureSubscription: "${{ Parameters.SubscriptionPrincipal }}"
+      appType: "webAppLinux"
+      WebAppName: "app-$(tf_applicationname)-$(tf_environmentname)"
+      packageForLinux: "${{ Parameters.DeploymentPackage }}"

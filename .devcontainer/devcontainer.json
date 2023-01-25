@@ -1,0 +1,89 @@
+{
+    "name": "terraform-codespaces",
+    "extensions": [
+      "ms-azuretools.vscode-azureterraform",
+      "DavidAnson.vscode-markdownlint",
+      "hashicorp.terraform",
+      "ms-azuretools.vscode-docker",
+      "esbenp.prettier-vscode",
+      "Gruntfuggly.todo-tree"
+    ],
+    "settings": {
+        "todo-tree.highlights.backgroundColourScheme": [],
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "todo-tree.general.tags": [
+            "BUG",
+            "HACK",
+            "FIXME",
+            "TODO",
+            "XXX",
+            "! ",
+            "? ",
+            "info",
+            "Review"
+        ],
+        "editor.minimap.enabled": false,
+        "todo-tree.general.showIconsInsteadOfTagsInStatusBar": true,
+        "todo-tree.general.statusBar": "tags",
+        "todo-tree.highlights.defaultHighlight": {
+            "icon": "squirrel",
+            "type": "text-and-comment",
+            "foreground": "green",
+            "opacity": 50,
+            "iconColour": "yellow"
+        },
+        "todo-tree.highlights.customHighlight": {
+            "TODO": {
+                "icon": "check",
+                "foreground": "#FF8C00",
+                "iconColour": "green",
+                "gutterIcon": true
+            },
+            "FIXME": {
+                "icon": "flame",
+                "foreground": "yellow",
+                "iconColour": "yellow",
+                "gutterIcon": true
+            },
+            "! ": {
+                "icon": "stop",
+                "foreground": "#FF2D00",
+                "iconColour": "red",
+                "gutterIcon": true
+            },
+            "BUG": {
+                "foreground": "#FF2D00",
+                "iconColour": "red",
+                "gutterIcon": true
+            },
+            "? ": {
+                "icon": "question",
+                "foreground": "#3498DB",
+                "iconColour": "#3498DB",
+                "gutterIcon": true
+            },
+            "info": {
+                "icon": "info",
+                "foreground": "#F7D000",
+                "iconColour": "#F7D000",
+                "gutterIcon": true
+            },
+            "Review": {
+                "icon": "pin",
+                "foreground": "#0bda51",
+                "iconColour": "#0bda51",
+                "gutterIcon": true
+            }
+        },
+        "todo-tree.regex.regexCaseSensitive": false,
+        "editor.tabCompletion": "onlySnippets",
+        "editor.formatOnSave": true,
+        "[terraform]": {
+            "editor.defaultFormatter": "hashicorp.terraform"
+        },
+        "todo-tree.tree.buttons.expand": false,
+        "todo-tree.tree.showCountsInTree": true,
+        "todo-tree.tree.trackFile": false,
+        "editor.renderWhitespace": "all"
+    }
+}

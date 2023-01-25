@@ -1,0 +1,116 @@
+resources:
+  repositories:
+    - repository: GitHubeShopSource
+      type: github
+      # TODO: Update YOUR endpoint and project path
+      endpoint: LukasWoelfinger
+      name: LukasWoelfinger/eShopOnWeb
+
+parameters:
+  - name: SubscriptionPrincipal
+    displayName: Azure Resource Manager connection
+    type: string
+    default: "Training-eWebShop-Demo"
+
+  - name: RestoreBuildProjects
+    displayName: Project file to restore and build
+    type: string
+    default: "**/*.csproj"
+
+  - name: TestProjects
+    displayName: Project file containing test automations.
+    type: string
+    default: "**/[Tt]ests/**/*.csproj"
+
+  - name: EnableTests
+    displayName: Execute tests
+    type: boolean
+    default: true
+
+  - name: DeploymentPackage
+    displayName: Location and filename of deployment zip
+    type: string
+    default: "$(System.ArtifactsDirectory)/**/Web.zip"
+
+  - name: BuildImage
+    displayName: Build Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - windows-latest
+      - ubuntu-latest
+      - macOS-latest
+
+  - name: DeployImage
+    displayName: Deplyoment Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - windows-latest
+      - ubuntu-latest
+      - macOS-latest
+
+  - name: TerraformCliVersion
+    displayName: Terraform CLI version to install
+    type: string
+    default: "1.3.7"
+
+  - name: terraformFolder
+    displayName: Terraform path on checkout
+    type: string
+    default: "$(System.DefaultWorkingDirectory)/PipeliningTraining/Demos/MS_eShopOnWeb/Terraform/"
+
+  - name: TerraformExecFolder
+    displayName: Terraform execution path
+    type: string
+    default: "$(System.ArtifactsDirectory)/drop/Terraform/"
+
+# variables to be defined for pipeline:
+#   location:            e.g. 'westeurope'
+#   tf_rgstorage:        e.g. 'rg-Storage'
+#   tf_storageaccount:   e.g. 'terraformstatestorage'
+#   tf_storagecontainer: e.g. 'terraform'
+#   tf_applicationname:  e.g. 'lwpulterraformweb'
+#   tf_environmentname:  e.g. 'Test' or 'Dev' #REMARK: prefix "tf_" required to prevent web.config manipulations from dotnet build CLI (parameter --environmentname exists here to setup ASPNETCORE_ENVIRONMENT)
+#   tf_storagekey:       e.g. 'WillBeSetWhileRuntime' <-- DO NOT store the real key here! It will be determined by the pipeline itself at runtime.# BuildConfiguration: e.g. debug
+#   configuration:       e.g. debug # Remark this will set the --configuration parameter of dotnet CLI (hidden feature)
+#   subscriptionid:      GUID of subscription
+
+trigger: none
+#- main
+
+stages:
+  - stage: TerraformCI
+    displayName: Stage to compile terraform infrastructure continously.
+    jobs:
+      - job:
+        displayName: Compile and Test
+        pool:
+          vmImage: "${{ Parameters.BuildImage }}"
+        steps:
+          # 0. Checkout sources
+          - checkout: self # since the YAML is load from GitHub, self is the Pipelining training project containing templates and Terraform
+          - checkout: GitHubeShopSource
+
+          - template: Templates/eShop_CI_Template.yml
+            parameters:
+              TerraformFolder: "${{ Parameters.TerraformFolder }}"
+              RestoreBuildProjects: "${{ Parameters.RestoreBuildProjects }}"
+              TestProjects: "${{ Parameters.TestProjects }}"
+              EnableTests: "${{ Parameters.EnableTests }}"
+
+  - stage: TerraformCD
+    displayName: Stage to deploy terraform infrastructure continously.
+    dependsOn: TerraformCI
+    jobs:
+      - job:
+        displayName: Validate and configure IaC and deploy
+        pool:
+          vmImage: "${{ Parameters.DeployImage }}"
+        steps:
+          - template: Templates/eShop_CD_Template.yml
+            parameters:
+              SubscriptionPrincipal: "${{ Parameters.SubscriptionPrincipal }}"
+              TerraformCliVersion: "${{ Parameters.TerraformCliVersion }}"
+              TerraformExecFolder: "${{ Parameters.TerraformExecFolder }}"
+              DeploymentPackage: "${{ Parameters.DeploymentPackage }}"
