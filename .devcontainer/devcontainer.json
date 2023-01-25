@@ -85,5 +85,5 @@
         "todo-tree.tree.showCountsInTree": true,
         "todo-tree.tree.trackFile": false,
         "editor.renderWhitespace": "all"
-    },
-    "postCreateCommand": "/bin/bash ./.devcontainer/post-install.sh"
+    }
+}
